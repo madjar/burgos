@@ -7,20 +7,20 @@
 #include "node.h"
 #include "file.h"
 
-Ftp::Ftp(QHostInfo host) : QObject(),
-File(QUrlInfo()),  host(host)
+Ftp::Ftp(QString host) : QObject(), File(QUrlInfo())
 {
-    init();
+    QHostInfo::lookupHost(host, this, SLOT(init(QHostInfo)));
 }
 
-Ftp::Ftp(QString host) : QObject(),
-File(QUrlInfo()), host(QHostInfo::fromName(host))
+void Ftp::init(QHostInfo host)
 {
-    init();
-}
-
-void Ftp::init()
-{
+    // Il faut une classe spécialisée pour tester la présence d'un ftp, qui fonctionne de manière asynchrone, et renvoie un QHostInfo
+    if (host.error() != QHostInfo::NoError)
+    {
+        suicide();
+        return;
+    }
+    this->host=host;
     connect (&ftp, SIGNAL(done(bool)),
              this, SLOT(ftpDone(bool)));
     connect (&ftp, SIGNAL(listInfo(const QUrlInfo &)),
@@ -81,7 +81,18 @@ void Ftp::ftpListInfo(const QUrlInfo &urlInfo)
         pendingDirs[currentDir+'/'+urlInfo.name()] = f;
 }
 
-void Ftp::ftpDone(bool /*error*/)
+void Ftp::ftpDone(bool error)
 {
-    processNextDirectory();
+    if (error) // Pas forcément propre, mais c'est une manière de dégommer les ftp non ouverts
+    {
+        suicide();
+    }
+    if (!ftp.state()==QFtp::Unconnected)
+        processNextDirectory();
+}
+
+void Ftp::suicide()
+{
+    Node::parent->children.removeAll(this);
+    deleteLater();
 }

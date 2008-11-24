@@ -13,7 +13,6 @@ class Ftp : public QObject, public File
     Q_OBJECT
 
 public:
-    Ftp(QHostInfo host);
     Ftp(QString host);
 
     QVariant data(int column, int role);
@@ -27,11 +26,12 @@ signals:
 private slots:
     void ftpDone(bool error);
     void ftpListInfo(const QUrlInfo &urlInfo);
+    void init(QHostInfo host);
 
 private:
-    void init();
     QHostInfo host;
 
+    void suicide();
     void processNextDirectory();
     QFtp ftp;
     QString currentDir;

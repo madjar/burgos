@@ -6,6 +6,10 @@
 #include "proxymodel.h"
 
 #include <QHeaderView>
+#include <QNetworkInterface>
+#include <QNetworkAddressEntry>
+#include <QHostAddress>
+
 #include <QtDebug>
 
 Burgos::Burgos(QWidget *parent) :
@@ -15,7 +19,18 @@ Burgos::Burgos(QWidget *parent) :
     m_ui->setupUi(this);
 
     model = new Model();
-    model->addFtp("jorge");
+    //model->addFtp("jorge");
+    // On ajoute chaque ftp du réseau
+    foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
+        foreach (QNetworkAddressEntry entry, iface.addressEntries())
+            if(!entry.broadcast().isNull() && entry.ip()!=QHostAddress(QHostAddress::LocalHost))
+            {
+                quint32 ip= entry.ip().toIPv4Address();
+                quint32 netmask = entry.netmask().toIPv4Address();
+                quint32 base = ip & netmask;
+                for (quint32 current = 0x00000000; current <= (~netmask); current++)
+                    model->addFtp( QHostAddress(base + current).toString());
+            }
 
     proxy = new ProxyModel();
     proxy->setSourceModel(model);
