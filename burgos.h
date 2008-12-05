@@ -2,6 +2,7 @@
 #define BURGOS_H
 
 #include <QtGui/QDialog>
+#include <QString>
 #include "model.h"
 #include "proxymodel.h"
 
@@ -15,6 +16,9 @@ class Burgos : public QDialog {
 public:
     explicit Burgos(QWidget *parent = 0);
     virtual ~Burgos();
+
+public slots:
+    void textEdited(const QString &string);
 
 protected:
     virtual void changeEvent(QEvent *e);

@@ -19,8 +19,9 @@ Burgos::Burgos(QWidget *parent) :
     m_ui->setupUi(this);
 
     model = new Model();
-    //model->addFtp("jorge");
-    // On ajoute chaque ftp du réseau
+#if 1
+    model->addFtp("jorge");
+#else
     foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
         foreach (QNetworkAddressEntry entry, iface.addressEntries())
             if(!entry.broadcast().isNull() && entry.ip()!=QHostAddress(QHostAddress::LocalHost))
@@ -31,7 +32,7 @@ Burgos::Burgos(QWidget *parent) :
                 for (quint32 current = 0x00000000; current <= (~netmask); current++)
                     model->addFtp( QHostAddress(base + current).toString());
             }
-
+#endif
     proxy = new ProxyModel();
     proxy->setSourceModel(model);
     proxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -49,11 +50,22 @@ Burgos::Burgos(QWidget *parent) :
     connect(m_ui->lineEdit, SIGNAL(textEdited(const QString &)),
             proxy, SLOT(setFilterWildcard(const QString &)));
 
+    connect(m_ui->lineEdit,SIGNAL(textEdited(const QString &)),
+            this,SLOT(textEdited(const QString &)));
+
 }
 
 Burgos::~Burgos()
 {
     delete m_ui;
+}
+
+void Burgos::textEdited(const QString &string)
+{
+    if (string.size() >= 2)
+        m_ui->treeView->expandAll();
+    else
+        m_ui->treeView->collapseAll();
 }
 
 void Burgos::changeEvent(QEvent *e)
