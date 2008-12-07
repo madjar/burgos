@@ -20,7 +20,7 @@ Burgos::Burgos(QWidget *parent) :
 
     model = new Model();
 #if 1
-    model->addFtp("jorge");
+    model->addFtp("localhost");
 #else
     foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
         foreach (QNetworkAddressEntry entry, iface.addressEntries())
@@ -46,10 +46,6 @@ Burgos::Burgos(QWidget *parent) :
     m_ui->treeView->header()->setResizeMode(0,QHeaderView::Stretch);
 
 
-
-    connect(m_ui->lineEdit, SIGNAL(textEdited(const QString &)),
-            proxy, SLOT(setFilterWildcard(const QString &)));
-
     connect(m_ui->lineEdit,SIGNAL(textEdited(const QString &)),
             this,SLOT(textEdited(const QString &)));
 
@@ -63,9 +59,15 @@ Burgos::~Burgos()
 void Burgos::textEdited(const QString &string)
 {
     if (string.size() >= 2)
+    {
+        proxy->setFilterWildcard(string);
         m_ui->treeView->expandAll();
+    }
     else
+    {
         m_ui->treeView->collapseAll();
+        proxy->setFilterWildcard(string);
+    }
 }
 
 void Burgos::changeEvent(QEvent *e)
