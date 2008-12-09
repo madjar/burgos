@@ -4,35 +4,27 @@
 #include "node.h"
 #include "ftp.h"
 #include "proxymodel.h"
+#include "scanftp.h"
 
 #include <QHeaderView>
 #include <QNetworkInterface>
 #include <QNetworkAddressEntry>
 #include <QHostAddress>
 
+#include <QProgressDialog>
+
 #include <QtDebug>
 
 Burgos::Burgos(QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     m_ui(new Ui::Burgos)
 {
     m_ui->setupUi(this);
 
     model = new Model();
-#if 1
-    model->addFtp("localhost");
-#else
-    foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
-        foreach (QNetworkAddressEntry entry, iface.addressEntries())
-            if(!entry.broadcast().isNull() && entry.ip()!=QHostAddress(QHostAddress::LocalHost))
-            {
-                quint32 ip= entry.ip().toIPv4Address();
-                quint32 netmask = entry.netmask().toIPv4Address();
-                quint32 base = ip & netmask;
-                for (quint32 current = 0x00000000; current <= (~netmask); current++)
-                    model->addFtp( QHostAddress(base + current).toString());
-            }
-#endif
+    QString temp = "jorge";
+    model->addFtp(temp);
+
     proxy = new ProxyModel();
     proxy->setSourceModel(model);
     proxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -49,6 +41,15 @@ Burgos::Burgos(QWidget *parent) :
     connect(m_ui->lineEdit,SIGNAL(textEdited(const QString &)),
             this,SLOT(textEdited(const QString &)));
 
+    //Scanning
+    ScanFtp *s = new ScanFtp();
+    connect(s, SIGNAL(maximumChanged(int)),
+            m_ui->progressBar, SLOT(setMaximum(int)));
+    connect(s, SIGNAL(progressChanged(int)),
+            m_ui->progressBar, SLOT(setValue(int)));
+    connect (s, SIGNAL(found(QString&)),
+             model, SLOT(addFtp(QString&)));
+    s->scan();
 }
 
 Burgos::~Burgos()

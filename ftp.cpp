@@ -7,25 +7,40 @@
 #include "node.h"
 #include "file.h"
 
+#include <QtDebug>
+
 Ftp::Ftp(QString host) : QObject(), File(QUrlInfo())
 {
-    QHostInfo::lookupHost(host, this, SLOT(init(QHostInfo)));
-}
-
-void Ftp::init(QHostInfo host)
-{
-    // Il faut une classe spécialisée pour tester la présence d'un ftp, qui fonctionne de manière asynchrone, et renvoie un QHostInfo
-    if (host.error() != QHostInfo::NoError)
-    {
-        suicide();
-        return;
-    }
-    this->host=host;
+    hostString=host;
     connect (&ftp, SIGNAL(done(bool)),
              this, SLOT(ftpDone(bool)));
     connect (&ftp, SIGNAL(listInfo(const QUrlInfo &)),
              this, SLOT(ftpListInfo(const QUrlInfo &)));
-    updateIndex();
+    connect (&ftp, SIGNAL(stateChanged(int)),
+             this, SLOT(ftpStateChanged(int)));
+    ftp.connectToHost(host, 21);
+    qDebug()<<host;
+}
+
+void Ftp::ftpStateChanged(int state)
+{
+    if (state == QFtp::Connected)
+    {
+        QHostInfo::lookupHost(hostString,
+                              this, SLOT(setHost(QHostInfo)));
+        updateIndex();
+    }
+}
+
+void Ftp::setHost(QHostInfo host)
+{
+    if (host.error() != QHostInfo::NoError)
+    {
+        qWarning()<< "Gloubiboulba, ça ne devrait pas arriver";
+        suicide();
+        return;
+    }
+    this->host=host;
 }
 
 QVariant Ftp::data(int column, int role)
@@ -51,7 +66,6 @@ QVariant Ftp::data(int column, int role)
 
 void Ftp::updateIndex()
 {
-    ftp.connectToHost(host.hostName(), 21);
     ftp.login();
 
     pendingDirs[QString("/")]=this;
@@ -75,19 +89,23 @@ void Ftp::processNextDirectory()
 
 void Ftp::ftpListInfo(const QUrlInfo &urlInfo)
 {
+    if (urlInfo.name()=="." || urlInfo.name()=="..")
+        return;
     File *f = new File(urlInfo);
     currentFile->addChild(f);
     if (urlInfo.isDir() && !urlInfo.isSymLink())
         pendingDirs[currentDir+'/'+urlInfo.name()] = f;
+    emit modified();
 }
 
 void Ftp::ftpDone(bool error)
 {
-    if (error) // Pas forcément propre, mais c'est une manière de dégommer les ftp non ouverts
+    if (error) // Pas forcément propre, mais c'est une manière de dégommer les ftp non ouverts ou privés
     {
-        suicide();
+        //suicide();
+        qDebug()<<ftp.errorString();
     }
-    if (!ftp.state()==QFtp::Unconnected)
+    if (ftp.state()!=QFtp::Unconnected)
         processNextDirectory();
 }
 
@@ -95,4 +113,5 @@ void Ftp::suicide()
 {
     Node::parent->children.removeAll(this);
     deleteLater();
+    qDebug()<<this->hostString<<"ne veut plus vivre";
 }

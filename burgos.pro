@@ -10,12 +10,16 @@ SOURCES += main.cpp \
     file.cpp \
     ftp.cpp \
     proxymodel.cpp \
-    burgos.cpp
+    burgos.cpp \
+    scanftp.cpp \
+    probeftp.cpp
 HEADERS += node.h \
     model.h \
     file.h \
     ftp.h \
     proxymodel.h \
-    burgos.h
+    burgos.h \
+    scanftp.h \
+    probeftp.h
 FORMS += burgos.ui
 RESOURCES += burgos.qrc

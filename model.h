@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <QObject>
 #include <QAbstractItemModel>
 #include <QString>
 
@@ -8,12 +9,12 @@ class Node;
 
 class Model : public QAbstractItemModel
 {
+    Q_OBJECT
 public:
     Model(QObject *parent = 0);
     ~Model();
 
     void setRootNode(Node *node);
-    void addFtp(QString host);
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent) const;
@@ -23,6 +24,9 @@ public:
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
+public slots:
+    void addFtp(QString &host);
 
 private:
     Node *nodeFromIndex(const QModelIndex &index) const;

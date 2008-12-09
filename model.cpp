@@ -21,10 +21,14 @@ void Model::setRootNode(Node *node)
     reset();
 }
 
-void Model::addFtp(QString host)
+void Model::addFtp(QString &host)
 {
     Ftp *ftp = new Ftp(host);
     rootNode->addChild(ftp);
+    //connect(ftp,SIGNAL(modified()), // Beaucoup trop lourd
+    //        this, SIGNAL(modelReset()));
+    //TODO Faut tenter de mettre à jour uniquement la partie concernée en en retrouvant son QModelIndex, et voir si c'est pas trop lourd
+    // Ce qu'on peut tenter, c'est de mettre à jour la taille du parent, et de laisser le reste faire.
 }
 
 QModelIndex Model::index(int row, int column, const QModelIndex &parent) const

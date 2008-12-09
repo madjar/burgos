@@ -20,6 +20,16 @@
    <item>
     <widget class="QTreeView" name="treeView"/>
    </item>
+   <item>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="maximum">
+      <number>0</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>

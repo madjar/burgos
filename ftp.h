@@ -21,15 +21,18 @@ public slots:
     void updateIndex();
 
 signals:
+    void modified();
     void done();
 
 private slots:
     void ftpDone(bool error);
     void ftpListInfo(const QUrlInfo &urlInfo);
-    void init(QHostInfo host);
+    void setHost(QHostInfo host);
+    void ftpStateChanged(int state);
 
 private:
     QHostInfo host;
+    QString hostString;
 
     void suicide();
     void processNextDirectory();

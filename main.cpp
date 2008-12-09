@@ -6,11 +6,17 @@
 #include "proxymodel.h"
 #include "burgos.h"
 
+#include "scanftp.h"
+
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Burgos b;
     b.show();
+
+    //ScanFtp s;
+    //s.scan();
 
     return a.exec();
 }
