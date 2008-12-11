@@ -8,6 +8,8 @@ File::File(QUrlInfo urlInfo) : Node(), urlInfo(urlInfo)
 {
 }
 
+File::~File() {}
+
 QVariant File::data(int column, int role)
 {
     if (role == Qt::TextAlignmentRole && column == 1)

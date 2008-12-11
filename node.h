@@ -8,7 +8,7 @@ class Node
 {
 public:
     Node();
-    ~Node();
+    virtual ~Node();
 
     virtual QVariant data(int column, int role);
     void addChild(Node *child);

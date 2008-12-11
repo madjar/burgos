@@ -9,6 +9,7 @@ class File : public Node
 {
 public:
     File(QUrlInfo urlInfo);
+    virtual ~File();
 
     virtual QVariant data(int column, int role);
 
