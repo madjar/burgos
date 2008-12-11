@@ -55,9 +55,10 @@ Burgos::Burgos(QWidget *parent) :
 
     //installe le nouvau messageHandler
     qInstallMsgHandler(Burgos::messageHandler);
+    connect(this, SIGNAL(appendLog(const QString &)), this, SLOT(appendLogInterface(const QString &)));
     connect(this, SIGNAL(appendLogView(const QString &)), m_ui->plainTextEdit, SLOT(appendPlainText(const QString &)));
-    emit appendLogView("Debug: Message Handler Started");
     /* aucune fonction qDebug, qWarning, qCritical ou qFatal a partir d'ici */
+    emit appendLog("Debug: Message Handler Started");
 }
 
 Burgos::~Burgos()
@@ -89,6 +90,17 @@ void Burgos::textEdited(const QString &string)
         m_ui->treeView->collapseAll();
         proxy->setFilterWildcard(string);
     }
+}
+
+/*
+ * Burgos::appendLogInterface
+ * gere le collage des messages dans la fenetre de messages
+ * string: message a coller
+ */
+void Burgos::appendLogInterface(const QString &string)
+{
+    emit appendLogView(string);
+    //fprintf(stdout, string.toStdString().c_str());
 }
 
 /*

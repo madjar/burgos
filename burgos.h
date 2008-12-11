@@ -30,10 +30,12 @@ public: //pour un acces a partir des fonctions membres statiques
 /* Signals et Slots */
 signals:
     /* Ajoute un element au LogView */
+    void appendLog(const QString &);
     void appendLogView(const QString &);
 
 public slots:
-    void textEdited(const QString &string);
+    void textEdited(const QString &);
+    void appendLogInterface(const QString &);
 
 /* Fonctions membres */
 protected:
