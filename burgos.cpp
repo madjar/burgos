@@ -15,6 +15,8 @@
 
 #include <QtDebug>
 
+Burgos* Burgos::singleton_ = NULL;
+
 Burgos::Burgos(QWidget *parent) :
     QWidget(parent),
     m_ui(new Ui::Burgos)
@@ -41,7 +43,7 @@ Burgos::Burgos(QWidget *parent) :
     connect(m_ui->lineEdit,SIGNAL(textEdited(const QString &)),
             this,SLOT(textEdited(const QString &)));
 
-    //Scanning
+    //Scanning/*
     ScanFtp *s = new ScanFtp();
     connect(s, SIGNAL(maximumChanged(int)),
             m_ui->progressBar, SLOT(setMaximum(int)));
@@ -50,11 +52,29 @@ Burgos::Burgos(QWidget *parent) :
     connect (s, SIGNAL(found(QString&)),
              model, SLOT(addFtp(QString&)));
     s->scan();
+
+    //installe le nouvau messageHandler
+    qInstallMsgHandler(Burgos::messageHandler);
+    connect(this, SIGNAL(appendLogView(const QString &)), m_ui->plainTextEdit, SLOT(appendPlainText(const QString &)));
+    emit appendLogView("Debug: Message Handler Started");
+    /* aucune fonction qDebug, qWarning, qCritical ou qFatal a partir d'ici */
 }
 
 Burgos::~Burgos()
 {
     delete m_ui;
+}
+
+Burgos* Burgos::pick()
+{
+    if (singleton_ == NULL) { singleton_ = new Burgos(); }
+    return singleton_;
+}
+
+void Burgos::kill()
+{
+    delete singleton_;
+    singleton_ = NULL;
 }
 
 void Burgos::textEdited(const QString &string)
@@ -69,6 +89,46 @@ void Burgos::textEdited(const QString &string)
         m_ui->treeView->collapseAll();
         proxy->setFilterWildcard(string);
     }
+}
+
+/*
+ * Burgos::messageHandler
+ * genere l'affichage des messages sur la fenetre de log
+ * est installe quand Burgos est cree
+ */
+//TODO: reflechir a mettre une interface au signal pour intercepter les messages simples _apres_ le msghandler
+void Burgos::messageHandler(QtMsgType type, const char *msg)
+{
+    switch (type)
+    {
+    case QtDebugMsg:
+        emit Burgos::pick()->appendLogView(QString("Debug: ") + msg);
+        break;
+    case QtWarningMsg:
+        emit Burgos::pick()->appendLogView(QString("Warning: ") + msg);
+        break;
+    case QtCriticalMsg:
+        emit Burgos::pick()->appendLogView(QString("Critical: ") + msg);
+        break;
+    case QtFatalMsg:
+        emit Burgos::pick()->appendLogView(QString("Fatal: ") + msg);
+        abort();
+    }
+    /* Pour la version sans GUI */
+/*  switch (type) {
+    case QtDebugMsg:
+        fprintf(stderr, "Debug: %s\n", msg);
+        break;
+    case QtWarningMsg:
+        fprintf(stderr, "Warning: %s\n", msg);
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "Critical: %s\n", msg);
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "Fatal: %s\n", msg);
+        abort();
+    }*/
 }
 
 void Burgos::changeEvent(QEvent *e)

@@ -12,8 +12,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Burgos b;
-    b.show();
+    Burgos::pick()->show();
 
     //ScanFtp s;
     //s.scan();
