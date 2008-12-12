@@ -11,8 +11,6 @@
 #include <QNetworkAddressEntry>
 #include <QHostAddress>
 
-#include <QProgressDialog>
-
 #include <QtDebug>
 
 Burgos::Burgos(QWidget *parent) :
@@ -36,6 +34,7 @@ Burgos::Burgos(QWidget *parent) :
     m_ui->treeView->header()->setStretchLastSection(false);
     m_ui->treeView->header()->setResizeMode(1,QHeaderView::ResizeToContents);
     m_ui->treeView->header()->setResizeMode(0,QHeaderView::Stretch);
+    m_ui->treeView->setAnimated(true);
 
 
     connect(m_ui->lineEdit,SIGNAL(textEdited(const QString &)),
@@ -50,6 +49,25 @@ Burgos::Burgos(QWidget *parent) :
     connect (s, SIGNAL(found(QString&)),
              model, SLOT(addFtp(QString&)));
     s->scan();
+
+    //affichage des pairs
+    this->peer = new PeerModel();
+    m_ui->treeView1->setModel(peer); //Faudra penser a nommer un peu mieux tout ca ;)
+    m_ui->treeView1->setSortingEnabled(true);
+    m_ui->treeView1->setItemsExpandable(false);
+    m_ui->treeView1->setRootIsDecorated(false);
+
+    connect(peer, SIGNAL(changed(QModelIndex)),
+            m_ui->treeView1, SLOT(update(QModelIndex)));
+
+    //installe le nouvau messageHandler
+    connect(this, SIGNAL(appendLog(const QString &)),
+            this, SLOT(appendLogInterface(const QString &)));
+    connect(this, SIGNAL(appendLogView(const QString &)),
+            m_ui->plainTextEdit, SLOT(appendPlainText(const QString &)));
+    //qInstallMsgHandler(Burgos::messageHandler);
+    /* aucune fonction qDebug, qWarning, qCritical ou qFatal a partir d'ici */
+    emit appendLog("Debug: Message Handler Started");
 }
 
 Burgos::~Burgos()
@@ -69,6 +87,55 @@ void Burgos::textEdited(const QString &string)
         m_ui->treeView->collapseAll();
         proxy->setFilterWildcard(string);
     }
+}
+
+/*
+ * Burgos::appendLogInterface
+ * gere le collage des messages dans la fenetre de messages
+ * string: message a coller
+ */
+void Burgos::appendLogInterface(const QString &string)
+{
+    emit appendLogView(string);
+    //fprintf(stdout, qPrintable(string));
+}
+
+/*
+ * Burgos::messageHandler
+ * genere l'affichage des messages sur la fenetre de log
+ * est installe quand Burgos est cree
+ */
+void Burgos::messageHandler(QtMsgType /*type*/, const char */*msg*/)
+{
+    /*switch (type)
+    {
+    case QtDebugMsg:
+        emit Burgos::pick()->appendLogView(QString("Debug: ") + msg);
+        break;
+    case QtWarningMsg:
+        emit Burgos::pick()->appendLogView(QString("Warning: ") + msg);
+        break;
+    case QtCriticalMsg:
+        emit Burgos::pick()->appendLogView(QString("Critical: ") + msg);
+        break;
+    case QtFatalMsg:
+        emit Burgos::pick()->appendLogView(QString("Fatal: ") + msg);
+        abort();
+    }
+  switch (type) {
+    case QtDebugMsg:
+        fprintf(stderr, "Debug: %s\n", msg);
+        break;
+    case QtWarningMsg:
+        fprintf(stderr, "Warning: %s\n", msg);
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "Critical: %s\n", msg);
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "Fatal: %s\n", msg);
+        abort();
+    }*/
 }
 
 void Burgos::changeEvent(QEvent *e)
