@@ -17,14 +17,11 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_tree_view">
       <property name="enabled">
        <bool>true</bool>
-      </property>
-      <property name="toolTip">
-       <string/>
       </property>
       <attribute name="title">
        <string>Tree View</string>
@@ -48,12 +45,22 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_log_view">
+     <widget class="QWidget" name="tab_peer_view">
       <property name="enabled">
        <bool>true</bool>
       </property>
-      <property name="focusPolicy">
-       <enum>Qt::WheelFocus</enum>
+      <attribute name="title">
+       <string>Peer View</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QTreeView" name="treeView"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_log_view">
+      <property name="enabled">
+       <bool>true</bool>
       </property>
       <attribute name="title">
        <string>Log View</string>

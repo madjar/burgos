@@ -5,6 +5,7 @@
 #include <QString>
 #include "model.h"
 #include "proxymodel.h"
+#include "peermodel.h"
 
 namespace Ui {
     class Burgos;
@@ -50,6 +51,7 @@ private:
     Ui::Burgos *m_ui;
     Model *model;
     ProxyModel *proxy;
+    PeerModel *peer;
 };
 
 #endif // BURGOS_H

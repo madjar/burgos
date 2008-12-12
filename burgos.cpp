@@ -34,6 +34,7 @@ Burgos::Burgos(QWidget *parent) :
 
     m_ui->treeView->setModel(proxy);
     m_ui->treeView->setSortingEnabled(true);
+    m_ui->treeView->setAnimated(true);
     m_ui->treeView->sortByColumn(0,Qt::AscendingOrder);
     m_ui->treeView->header()->setStretchLastSection(false);
     m_ui->treeView->header()->setResizeMode(1,QHeaderView::ResizeToContents);
@@ -53,10 +54,22 @@ Burgos::Burgos(QWidget *parent) :
              model, SLOT(addFtp(QString&)));
     s->scan();
 
+    //affichage des pairs
+    this->peer = new PeerModel();
+    m_ui->treeView1->setModel(peer); //Faudra penser a nommer un peu mieux tout ca ;)
+    m_ui->treeView1->setSortingEnabled(true);
+    m_ui->treeView1->setItemsExpandable(false);
+    m_ui->treeView1->setRootIsDecorated(false);
+
+    connect(peer, SIGNAL(changed(QModelIndex)),
+            m_ui->treeView1, SLOT(update(QModelIndex)));
+
     //installe le nouvau messageHandler
+    connect(this, SIGNAL(appendLog(const QString &)),
+            this, SLOT(appendLogInterface(const QString &)));
+    connect(this, SIGNAL(appendLogView(const QString &)),
+            m_ui->plainTextEdit, SLOT(appendPlainText(const QString &)));
     qInstallMsgHandler(Burgos::messageHandler);
-    connect(this, SIGNAL(appendLog(const QString &)), this, SLOT(appendLogInterface(const QString &)));
-    connect(this, SIGNAL(appendLogView(const QString &)), m_ui->plainTextEdit, SLOT(appendPlainText(const QString &)));
     /* aucune fonction qDebug, qWarning, qCritical ou qFatal a partir d'ici */
     emit appendLog("Debug: Message Handler Started");
 }
@@ -100,7 +113,7 @@ void Burgos::textEdited(const QString &string)
 void Burgos::appendLogInterface(const QString &string)
 {
     emit appendLogView(string);
-    //fprintf(stdout, string.toStdString().c_str());
+    fprintf(stdout, string.toStdString().c_str());
 }
 
 /*
@@ -108,7 +121,6 @@ void Burgos::appendLogInterface(const QString &string)
  * genere l'affichage des messages sur la fenetre de log
  * est installe quand Burgos est cree
  */
-//TODO: reflechir a mettre une interface au signal pour intercepter les messages simples _apres_ le msghandler
 void Burgos::messageHandler(QtMsgType type, const char *msg)
 {
     switch (type)
@@ -127,7 +139,7 @@ void Burgos::messageHandler(QtMsgType type, const char *msg)
         abort();
     }
     /* Pour la version sans GUI */
-/*  switch (type) {
+  switch (type) {
     case QtDebugMsg:
         fprintf(stderr, "Debug: %s\n", msg);
         break;
@@ -140,7 +152,7 @@ void Burgos::messageHandler(QtMsgType type, const char *msg)
     case QtFatalMsg:
         fprintf(stderr, "Fatal: %s\n", msg);
         abort();
-    }*/
+    }
 }
 
 void Burgos::changeEvent(QEvent *e)

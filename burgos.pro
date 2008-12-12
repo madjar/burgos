@@ -12,7 +12,9 @@ SOURCES += main.cpp \
     proxymodel.cpp \
     burgos.cpp \
     scanftp.cpp \
-    probeftp.cpp
+    probeftp.cpp \
+    peer.cpp \
+    peermodel.cpp
 HEADERS += node.h \
     model.h \
     file.h \
@@ -20,6 +22,8 @@ HEADERS += node.h \
     proxymodel.h \
     burgos.h \
     scanftp.h \
-    probeftp.h
+    probeftp.h \
+    peer.h \
+    peermodel.h
 FORMS += burgos.ui
 RESOURCES += burgos.qrc
