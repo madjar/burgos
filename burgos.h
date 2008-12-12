@@ -21,17 +21,8 @@ public:
 
 public slots:
     void textEdited(const QString &);
-    void appendLogInterface(const QString &);
-
-signals:
-    /* Ajoute un element au LogView */
-    void appendLog(const QString &);
-    void appendLogView(const QString &);
 
 protected:
-    /* Message Handler pour la version GUI */
-    static void messageHandler(QtMsgType, const char *);
-
     virtual void changeEvent(QEvent *e);
 
 private:

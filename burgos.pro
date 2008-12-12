@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     scanftp.cpp \
     probeftp.cpp \
     peer.cpp \
-    peermodel.cpp
+    peermodel.cpp \
+    messagehandler.cpp
 HEADERS += node.h \
     model.h \
     file.h \
@@ -24,6 +25,7 @@ HEADERS += node.h \
     scanftp.h \
     probeftp.h \
     peer.h \
-    peermodel.h
+    peermodel.h \
+    messagehandler.h
 FORMS += burgos.ui
 RESOURCES += burgos.qrc
