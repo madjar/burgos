@@ -30,7 +30,7 @@ QModelIndex PeerModel::index(int row, int column, const QModelIndex &parent) con
         return QModelIndex();
 }
 
-QModelIndex PeerModel::parent(const QModelIndex &child) const
+QModelIndex PeerModel::parent(const QModelIndex &/*child*/) const
 {
     return QModelIndex();
 }
@@ -79,11 +79,11 @@ QVariant PeerModel::headerData(int section,  Qt::Orientation orientation, int ro
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0)
         {
-            return tr("Peer");
+            return tr("Pair", "peer hostname or ip address");
         }
         else if (section == 1)
         {
-            return tr("Info");
+            return tr("Informations", "peer informations");
         }
     }
     return QVariant();
@@ -94,12 +94,12 @@ void PeerModel::update()
     QList<QVariant> rootData;
     if (this->rootItem->rowCount() > 1)
     {
-       rootData << "" <<"Pairs disponibles";
+       rootData << "" << tr("%n pair(s) disponible(s)", "other users are found", this->rootItem->rowCount()-1);
        this->rootItem->set(rootData);
     }
     else
     {
-       rootData << "" <<"Aucun pairs disponibles";
+       rootData << "" << tr("Aucun pairs disponibles", "no other users are found");
        this->rootItem->set(rootData);
     }
     emit changed(QModelIndex());

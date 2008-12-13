@@ -76,7 +76,7 @@ Burgos::Burgos(QWidget *parent) :
     //affichage des pairs
     this->peer = new PeerModel();
     m_ui->treeView1->setModel(peer); //Faudra penser a nommer un peu mieux tout ca ;)
-    m_ui->treeView1->setSortingEnabled(true);
+    m_ui->treeView1->setSortingEnabled(false);
     m_ui->treeView1->setItemsExpandable(false);
     m_ui->treeView1->setRootIsDecorated(false);
 
