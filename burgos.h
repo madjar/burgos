@@ -1,8 +1,12 @@
 #ifndef BURGOS_H
 #define BURGOS_H
 
-#include <QtGui/QWidget>
 #include <QString>
+#include <QCloseEvent>
+#include <QtGui/QWidget>
+#include <QtGui/QIcon>
+#include <QtGui/QMenu>
+#include <QtGui/QSystemTrayIcon>
 #include "model.h"
 #include "proxymodel.h"
 #include "peermodel.h"
@@ -21,11 +25,31 @@ public:
 
 public slots:
     void textEdited(const QString &);
+    void closeEvent(QCloseEvent *);
+
+    void fakeClose();
+    void fakeOpen();
+    void fakeOpen(QSystemTrayIcon::ActivationReason);
 
 protected:
     virtual void changeEvent(QEvent *e);
+    void createIcon();
+    void createActions();
+    void createTrayIcon();
 
 private:
+    QIcon *icon;
+
+    QAction *minimizeAction;
+    QAction *maximizeAction;
+    QAction *restoreAction;
+    QAction *quitAction;
+
+    QMenu *trayIconMenu;
+    QMenu *trayMiniIconMenu;
+
+    QSystemTrayIcon *trayIcon;
+
     Ui::Burgos *m_ui;
     Model *model;
     ProxyModel *proxy;

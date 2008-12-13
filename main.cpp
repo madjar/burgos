@@ -12,15 +12,18 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     MessageHandler::pick();
+    qDebug("MessageHandler started");
 
     Burgos b;
+    qDebug("Burgos started");
     b.show();
 
     //ScanFtp s;
     //s.scan();
 
-    return a.exec();
+    qDebug("Starting app");
+    return app.exec();
 }
