@@ -18,7 +18,29 @@ Burgos::Burgos(QWidget *parent) :
     QWidget(parent),
     m_ui(new Ui::Burgos)
 {
+
     m_ui->setupUi(this);
+
+    connect(MessageHandler::pick(), SIGNAL(appendLog(const QString &)),
+            m_ui->plainTextEdit, SLOT(appendPlainText(const QString &)));
+
+    this->createIcon();
+
+    this->setWindowIcon(*this->icon);
+    this->setWindowTitle("Burgos");
+
+    if (QSystemTrayIcon::isSystemTrayAvailable())
+    {
+        this->createActions();
+        this->createTrayIcon();
+        this->trayIcon->show();
+        connect(this->trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+                this, SLOT(fakeOpen(QSystemTrayIcon::ActivationReason)));
+        if (QSystemTrayIcon::supportsMessages())
+        this->trayIcon->showMessage(tr("Burgos est lancé"),
+                                tr("Maintenant, on est au courant grâce a cette ennuyeux petit tray ;)"),
+                                QSystemTrayIcon::Information, 2000);
+    }
 
     model = new Model();
     QString temp = "jorge";
@@ -54,16 +76,12 @@ Burgos::Burgos(QWidget *parent) :
     //affichage des pairs
     this->peer = new PeerModel();
     m_ui->treeView1->setModel(peer); //Faudra penser a nommer un peu mieux tout ca ;)
-    m_ui->treeView1->setSortingEnabled(true);
+    m_ui->treeView1->setSortingEnabled(false);
     m_ui->treeView1->setItemsExpandable(false);
     m_ui->treeView1->setRootIsDecorated(false);
 
     connect(peer, SIGNAL(changed(QModelIndex)),
             m_ui->treeView1, SLOT(update(QModelIndex)));
-
-
-    connect(MessageHandler::pick(), SIGNAL(appendLog(const QString &)),
-            m_ui->plainTextEdit, SLOT(appendPlainText(const QString &)));
 }
 
 Burgos::~Burgos()
@@ -85,13 +103,83 @@ void Burgos::textEdited(const QString &string)
     }
 }
 
-void Burgos::changeEvent(QEvent *e)
+void Burgos::closeEvent(QCloseEvent *event)
 {
-    switch(e->type()) {
+    if (QSystemTrayIcon::isSystemTrayAvailable())
+    {
+        this->fakeClose();
+        if (QSystemTrayIcon::supportsMessages())
+        this->trayIcon->showMessage(tr("Burgos est maintenant réduit"),
+                                tr("Burgos continue de tourner en tâche de fond pour actualiser la liste des ftp"),
+                                QSystemTrayIcon::Information, 2000);
+        event->ignore();
+    }
+    else
+    {
+        event->accept();
+    }
+}
+
+void Burgos::fakeClose()
+{
+    this->trayIcon->setContextMenu(this->trayIconMenu);
+    this->showMinimized();
+    this->hide();
+}
+
+void Burgos::fakeOpen()
+{
+    this->trayIcon->setContextMenu(this->trayMiniIconMenu);
+    this->show();
+    this->showNormal();
+    this->activateWindow();
+}
+
+void Burgos::fakeOpen(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::DoubleClick ||
+        reason == QSystemTrayIcon::Trigger ||
+        reason == QSystemTrayIcon::MiddleClick)
+    {
+        this->trayIcon->setContextMenu(this->trayMiniIconMenu);
+        this->show();
+        this->showNormal();
+    }
+}
+
+void Burgos::changeEvent(QEvent *event)
+{
+    switch(event->type()) {
     case QEvent::LanguageChange:
         m_ui->retranslateUi(this);
         break;
     default:
         break;
     }
+}
+
+void Burgos::createIcon()
+{
+    this->icon = new QIcon(QPixmap(":/icons/computer.png"));
+}
+
+void Burgos::createActions()
+{
+    this->restoreAction = new QAction(tr("&Ouvrir"), this);
+    connect(this->restoreAction, SIGNAL(triggered()), this, SLOT(fakeOpen()));
+    this->quitAction = new QAction(tr("&Quitter"), this);
+    connect(this->quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+}
+
+void Burgos::createTrayIcon()
+{
+    this->trayIconMenu = new QMenu(this);
+    this->trayIconMenu->addAction(this->restoreAction);
+    //this->trayIconMenu->addSeparator();
+    this->trayIconMenu->addAction(this->quitAction);
+    this->trayMiniIconMenu = new QMenu(this);
+    this->trayMiniIconMenu->addAction(this->quitAction);
+    this->trayIcon = new QSystemTrayIcon(this);
+    this->trayIcon->setContextMenu(this->trayMiniIconMenu);
+    this->trayIcon->setIcon(QIcon(*this->icon));
 }

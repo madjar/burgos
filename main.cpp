@@ -1,5 +1,6 @@
 #include <QtCore>
 #include <QtGui>
+#include <QLocale>
 #include "ftp.h"
 #include "model.h"
 #include "node.h"
@@ -12,15 +13,24 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     MessageHandler::pick();
+    qDebug("MessageHandler started");
+
+    qDebug("Loading locale");
+    QTranslator translator;
+    translator.load(QString("burgos_") + QLocale::system().name());
+    app.installTranslator(&translator);
+    qDebug("locale is %s", qPrintable(QLocale::system().name()));
 
     Burgos b;
+    qDebug("Burgos started");
     b.show();
 
     //ScanFtp s;
     //s.scan();
 
-    return a.exec();
+    qDebug("Starting app");
+    return app.exec();
 }
