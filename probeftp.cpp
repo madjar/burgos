@@ -12,6 +12,7 @@ ProbeFtp::ProbeFtp(QString host, QObject *parent) : QObject(parent), host(host)
     connect (ftp, SIGNAL(stateChanged(int)),
              this, SLOT(ftpStateChanged(int)));
     ftp->connectToHost(host);
+    ftp->login("anonymous","burgosProbing");
     QTimer::singleShot(timeOut , this, SLOT(deleteLater()));
 
 }
@@ -30,15 +31,14 @@ ProbeFtp::~ProbeFtp()
 
 void ProbeFtp::ftpStateChanged(int state)
 {
-    if (state == QFtp::Connected)
+    if (state == QFtp::LoggedIn)
     {
         emit connected(host);
-        //qDebug()<<host;
         ftp->close();
     }
     else if (state == QFtp::Unconnected)
     {
-        qDebug()<<host<<ftp->error();
+        //qDebug()<<host<<ftp->error();
         deleteLater();
     }
 }

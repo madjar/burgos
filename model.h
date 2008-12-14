@@ -28,8 +28,12 @@ public:
 public slots:
     void addFtp(QString &host);
 
+private slots:
+    void nodeUpdated(Node *node);
+
 private:
     Node *nodeFromIndex(const QModelIndex &index) const;
+    QModelIndex indexFromNode(Node *node, int column);
     Node *rootNode;
 };
 

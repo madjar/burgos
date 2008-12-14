@@ -4,6 +4,8 @@
 #include "node.h"
 #include "ftp.h"
 
+#include <QtDebug>
+
 Model::Model(QObject *parent) : QAbstractItemModel(parent)
 {
     rootNode = new Node();
@@ -23,12 +25,13 @@ void Model::setRootNode(Node *node)
 
 void Model::addFtp(QString &host)
 {
+    int pos = rootNode->children.size();
+    beginInsertRows(QModelIndex(), pos, pos);
     Ftp *ftp = new Ftp(host);
     rootNode->addChild(ftp);
-    //connect(ftp,SIGNAL(modified()), // Beaucoup trop lourd
-    //        this, SIGNAL(modelReset()));
-    //TODO Faut tenter de mettre à jour uniquement la partie concernée en en retrouvant son QModelIndex, et voir si c'est pas trop lourd
-    // Ce qu'on peut tenter, c'est de mettre à jour la taille du parent, et de laisser le reste faire.
+    connect(ftp,SIGNAL(modified(Node*)),
+            this, SLOT(nodeUpdated(Node*)));
+    endInsertRows();
 }
 
 QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
@@ -94,6 +97,11 @@ QVariant Model::headerData(int section,  Qt::Orientation orientation, int role) 
     return QVariant();
 }
 
+void Model::nodeUpdated(Node *node)
+{
+    emit dataChanged(indexFromNode(node, 0), indexFromNode(node, 1));
+}
+
 Node *Model::nodeFromIndex(const QModelIndex &index) const
 {
     if (index.isValid()) {
@@ -101,4 +109,16 @@ Node *Model::nodeFromIndex(const QModelIndex &index) const
     } else {
         return rootNode;
     }
+}
+
+QModelIndex Model::indexFromNode(Node *node, int column)
+{
+    if (!node)
+        return QModelIndex();
+    Node *parentNode = node->parent;
+    if (!parentNode)
+        return QModelIndex();
+
+    int row = parentNode->children.indexOf(node);
+    return createIndex(row, column, parentNode);
 }

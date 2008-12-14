@@ -19,7 +19,7 @@ Ftp::Ftp(QString host) : QObject(), File(QUrlInfo())
     connect (&ftp, SIGNAL(stateChanged(int)),
              this, SLOT(ftpStateChanged(int)));
     ftp.connectToHost(host, 21);
-    qDebug()<<host;
+    qDebug()<<host<<tr("connected");
 }
 
 void Ftp::ftpStateChanged(int state)
@@ -66,7 +66,7 @@ QVariant Ftp::data(int column, int role)
 
 void Ftp::updateIndex()
 {
-    ftp.login();
+    ftp.login("anonymous","burgosIndexing");
 
     pendingDirs[QString("/")]=this;
     processNextDirectory();
@@ -94,8 +94,9 @@ void Ftp::ftpListInfo(const QUrlInfo &urlInfo)
     File *f = new File(urlInfo);
     currentFile->addChild(f);
     if (urlInfo.isDir() && !urlInfo.isSymLink())
+    //if (urlInfo.isDir())
         pendingDirs[currentDir+'/'+urlInfo.name()] = f;
-    emit modified();
+    emit modified(f);
 }
 
 void Ftp::ftpDone(bool error)

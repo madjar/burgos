@@ -15,8 +15,8 @@
 #include <QtDebug>
 
 Burgos::Burgos(QWidget *parent) :
-    QWidget(parent),
-    m_ui(new Ui::Burgos)
+        QWidget(parent),
+        m_ui(new Ui::Burgos)
 {
 
     m_ui->setupUi(this);
@@ -37,14 +37,12 @@ Burgos::Burgos(QWidget *parent) :
         connect(this->trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                 this, SLOT(fakeOpen(QSystemTrayIcon::ActivationReason)));
         if (QSystemTrayIcon::supportsMessages())
-        this->trayIcon->showMessage(tr("Burgos est lancé"),
-                                tr("Maintenant, on est au courant grâce a cette ennuyeux petit tray ;)"),
-                                QSystemTrayIcon::Information, 2000);
+            this->trayIcon->showMessage(tr("Burgos est lancé"),
+                                        tr("Maintenant, on est au courant grâce a cette ennuyeux petit tray ;)"),
+                                        QSystemTrayIcon::Information, 2000);
     }
 
     model = new Model();
-    QString temp = "jorge";
-    model->addFtp(temp);
 
     proxy = new ProxyModel();
     proxy->setSourceModel(model);
@@ -63,25 +61,21 @@ Burgos::Burgos(QWidget *parent) :
     connect(m_ui->lineEdit,SIGNAL(textEdited(const QString &)),
             this,SLOT(textEdited(const QString &)));
 
-    //Scanning
-    ScanFtp *s = new ScanFtp();
-    connect(s, SIGNAL(maximumChanged(int)),
-            m_ui->progressBar, SLOT(setMaximum(int)));
-    connect(s, SIGNAL(progressChanged(int)),
-            m_ui->progressBar, SLOT(setValue(int)));
-    connect (s, SIGNAL(found(QString&)),
-             model, SLOT(addFtp(QString&)));
-    s->scan();
-
     //affichage des pairs
     this->peer = new PeerModel();
-    m_ui->treeView1->setModel(peer); //Faudra penser a nommer un peu mieux tout ca ;)
-    m_ui->treeView1->setSortingEnabled(false);
-    m_ui->treeView1->setItemsExpandable(false);
-    m_ui->treeView1->setRootIsDecorated(false);
+    m_ui->peerView->setModel(peer); //Faudra penser a nommer un peu mieux tout ca ;)
+    m_ui->peerView->setSortingEnabled(false);
+    m_ui->peerView->setItemsExpandable(false);
+    m_ui->peerView->setRootIsDecorated(false);
 
     connect(peer, SIGNAL(changed(QModelIndex)),
-            m_ui->treeView1, SLOT(update(QModelIndex)));
+            m_ui->peerView, SLOT(update(QModelIndex)));
+
+    //Config de la ProgressBar
+    connect(this, SIGNAL(setProgressBarMaximum(int)),
+            m_ui->progressBar, SLOT(setMaximum(int)));
+    connect(this, SIGNAL(setProgressBarValue(int)),
+            m_ui->progressBar, SLOT(setValue(int)));
 }
 
 Burgos::~Burgos()
@@ -109,9 +103,9 @@ void Burgos::closeEvent(QCloseEvent *event)
     {
         this->fakeClose();
         if (QSystemTrayIcon::supportsMessages())
-        this->trayIcon->showMessage(tr("Burgos est maintenant réduit"),
-                                tr("Burgos continue de tourner en tâche de fond pour actualiser la liste des ftp"),
-                                QSystemTrayIcon::Information, 2000);
+            this->trayIcon->showMessage(tr("Burgos est maintenant réduit"),
+                                        tr("Burgos continue de tourner en tâche de fond pour actualiser la liste des ftp"),
+                                        QSystemTrayIcon::Information, 2000);
         event->ignore();
     }
     else

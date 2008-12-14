@@ -23,6 +23,13 @@ public:
     explicit Burgos(QWidget *parent = 0);
     virtual ~Burgos();
 
+    Model *model;
+
+    //Ces slots vont peter quand j'aurais trouvé mieux pour le scan
+signals:
+    void setProgressBarMaximum(int);
+    void setProgressBarValue(int);
+
 public slots:
     void textEdited(const QString &);
     void closeEvent(QCloseEvent *);
@@ -51,7 +58,6 @@ private:
     QSystemTrayIcon *trayIcon;
 
     Ui::Burgos *m_ui;
-    Model *model;
     ProxyModel *proxy;
     PeerModel *peer;
 };

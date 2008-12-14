@@ -21,7 +21,7 @@ public slots:
     void updateIndex();
 
 signals:
-    void modified();
+    void modified(Node *node);
     void done();
 
 private slots:

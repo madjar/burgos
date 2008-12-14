@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<ui version="4.0" >
  <class>Burgos</class>
- <widget class="QWidget" name="Burgos">
-  <property name="geometry">
+ <widget class="QWidget" name="Burgos" >
+  <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
@@ -10,65 +9,65 @@
     <height>300</height>
    </rect>
   </property>
-  <property name="windowTitle">
+  <property name="windowTitle" >
    <string>Burgos</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" >
+    <widget class="QTabWidget" name="tabWidget" >
+     <property name="currentIndex" >
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab_tree_view">
-      <property name="enabled">
+     <widget class="QWidget" name="tab_tree_view" >
+      <property name="enabled" >
        <bool>true</bool>
       </property>
-      <attribute name="title">
+      <attribute name="title" >
        <string>Tree View</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout" >
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="lineEdit" />
        </item>
        <item>
-        <widget class="QTreeView" name="treeView"/>
+        <widget class="QTreeView" name="treeView" />
        </item>
        <item>
-        <widget class="QProgressBar" name="progressBar">
-         <property name="maximum">
+        <widget class="QProgressBar" name="progressBar" >
+         <property name="maximum" >
           <number>0</number>
          </property>
-         <property name="value">
-          <number>0</number>
+         <property name="value" >
+          <number>394</number>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_peer_view">
-      <property name="enabled">
+     <widget class="QWidget" name="tab_peer_view" >
+      <property name="enabled" >
        <bool>true</bool>
       </property>
-      <attribute name="title">
+      <attribute name="title" >
        <string>Peer View</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_3" >
        <item>
-        <widget class="QTreeView" name="treeView"/>
+        <widget class="QTreeView" name="peerView" />
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_log_view">
-      <property name="enabled">
+     <widget class="QWidget" name="tab_log_view" >
+      <property name="enabled" >
        <bool>true</bool>
       </property>
-      <attribute name="title">
+      <attribute name="title" >
        <string>Log View</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_2" >
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEdit">
-         <property name="readOnly">
+        <widget class="QPlainTextEdit" name="plainTextEdit" >
+         <property name="readOnly" >
           <bool>true</bool>
          </property>
         </widget>

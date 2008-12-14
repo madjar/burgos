@@ -24,12 +24,20 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
     qDebug("locale is %s", qPrintable(QLocale::system().name()));
 
-    Burgos b;
+    Burgos burgos;
     qDebug("Burgos started");
-    b.show();
+    burgos.show();
 
-    //ScanFtp s;
-    //s.scan();
+    //Scanning
+    ScanFtp *s = new ScanFtp();
+    QObject::connect(s, SIGNAL(maximumChanged(int)),
+                   &burgos, SIGNAL(setProgressBarMaximum(int)));
+    QObject::connect(s, SIGNAL(progressChanged(int)),
+                   &burgos, SIGNAL(setProgressBarValue(int)));
+    QObject::connect (s, SIGNAL(found(QString&)),
+                    burgos.model, SLOT(addFtp(QString&)));
+    s->scan();
+
 
     qDebug("Starting app");
     return app.exec();
