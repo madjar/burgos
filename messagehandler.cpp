@@ -63,5 +63,5 @@ void MessageHandler::staticHandle(QtMsgType type, const char* msg)
 void MessageHandler::appendLogInterface(const QString &string)
 {
     emit MessageHandler::appendLog(string);
-    fprintf(stdout, qPrintable(string));
+    fprintf(stdout, "%s", qPrintable(string));
 }
