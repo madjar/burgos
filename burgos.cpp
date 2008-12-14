@@ -27,7 +27,7 @@ Burgos::Burgos(QWidget *parent) :
     this->createIcon();
 
     this->setWindowIcon(*this->icon);
-    this->setWindowTitle("Burgos");
+    this->setWindowTitle(tr("Burgos"));
 
     if (QSystemTrayIcon::isSystemTrayAvailable())
     {
@@ -37,8 +37,8 @@ Burgos::Burgos(QWidget *parent) :
         connect(this->trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                 this, SLOT(fakeOpen(QSystemTrayIcon::ActivationReason)));
         if (QSystemTrayIcon::supportsMessages())
-            this->trayIcon->showMessage(tr("Burgos est lancé"),
-                                        tr("Maintenant, on est au courant grâce a cette ennuyeux petit tray ;)"),
+            this->trayIcon->showMessage(tr("Burgos is running"),
+                                        tr("Anyway, this message is going to disapear sonner or latter."),
                                         QSystemTrayIcon::Information, 2000);
     }
 
@@ -63,7 +63,7 @@ Burgos::Burgos(QWidget *parent) :
 
     //affichage des pairs
     this->peer = new PeerModel();
-    m_ui->peerView->setModel(peer); //Faudra penser a nommer un peu mieux tout ca ;)
+    m_ui->peerView->setModel(peer);
     m_ui->peerView->setSortingEnabled(false);
     m_ui->peerView->setItemsExpandable(false);
     m_ui->peerView->setRootIsDecorated(false);
@@ -85,7 +85,7 @@ Burgos::~Burgos()
 
 void Burgos::textEdited(const QString &string)
 {
-    if (string.size() >= 2)
+    if (string.size() >= 3)
     {
         proxy->setFilterWildcard(string);
         m_ui->treeView->expandAll();
@@ -103,8 +103,8 @@ void Burgos::closeEvent(QCloseEvent *event)
     {
         this->fakeClose();
         if (QSystemTrayIcon::supportsMessages())
-            this->trayIcon->showMessage(tr("Burgos est maintenant réduit"),
-                                        tr("Burgos continue de tourner en tâche de fond pour actualiser la liste des ftp"),
+            this->trayIcon->showMessage(tr("Burgos is now reduced"),
+                                        tr("Burgos is still running and refreshing the list of ftps"),
                                         QSystemTrayIcon::Information, 2000);
         event->ignore();
     }
@@ -159,9 +159,9 @@ void Burgos::createIcon()
 
 void Burgos::createActions()
 {
-    this->restoreAction = new QAction(tr("&Ouvrir"), this);
+    this->restoreAction = new QAction(tr("&Open"), this);
     connect(this->restoreAction, SIGNAL(triggered()), this, SLOT(fakeOpen()));
-    this->quitAction = new QAction(tr("&Quitter"), this);
+    this->quitAction = new QAction(tr("&Close"), this);
     connect(this->quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 

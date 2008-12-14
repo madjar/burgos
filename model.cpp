@@ -89,9 +89,9 @@ QVariant Model::headerData(int section,  Qt::Orientation orientation, int role) 
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0) {
-            return tr("Nom");
+            return tr("Name");
         } else if (section == 1) {
-            return tr("Taille");
+            return tr("Size");
         } //TODO
     }
     return QVariant();

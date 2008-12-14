@@ -19,7 +19,7 @@ Ftp::Ftp(QString host) : QObject(), File(QUrlInfo())
     connect (&ftp, SIGNAL(stateChanged(int)),
              this, SLOT(ftpStateChanged(int)));
     ftp.connectToHost(host, 21);
-    qDebug()<<host<<tr("connected");
+    qDebug()<<host<<"connected";
 }
 
 void Ftp::ftpStateChanged(int state)
