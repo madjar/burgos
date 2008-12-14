@@ -36,7 +36,7 @@ void Ftp::setHost(QHostInfo host)
 {
     if (host.error() != QHostInfo::NoError)
     {
-        qWarning()<< "Gloubiboulba, ça ne devrait pas arriver";
+        qDebug()<< host.hostName()<< "n'a pas pu être ajouté parce que :"<<host.error();
         suicide();
         return;
     }
