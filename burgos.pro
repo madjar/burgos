@@ -29,4 +29,5 @@ HEADERS += node.h \
     messagehandler.h
 FORMS += burgos.ui
 RESOURCES += burgos.qrc
-TRANSLATIONS = burgos_fr_FR.ts burgos_en_GB.ts
+TRANSLATIONS = burgos_fr.ts \
+	burgos_en.ts
