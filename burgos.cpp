@@ -76,6 +76,9 @@ Burgos::Burgos(QWidget *parent) :
             m_ui->progressBar, SLOT(setMaximum(int)));
     connect(this, SIGNAL(setProgressBarValue(int)),
             m_ui->progressBar, SLOT(setValue(int)));
+    //Et du bouton
+    connect(m_ui->scanButton, SIGNAL(clicked()),
+            this, SLOT(scan()));
 }
 
 Burgos::~Burgos()
@@ -95,6 +98,19 @@ void Burgos::textEdited(const QString &string)
         m_ui->treeView->collapseAll();
         proxy->setFilterWildcard(string);
     }
+}
+
+void Burgos::scan()
+{
+    m_ui->scanButton->setEnabled(false);
+    ScanFtp *s = new ScanFtp();
+    QObject::connect(s, SIGNAL(maximumChanged(int)),
+                   this, SIGNAL(setProgressBarMaximum(int)));
+    QObject::connect(s, SIGNAL(progressChanged(int)),
+                   this, SIGNAL(setProgressBarValue(int)));
+    QObject::connect (s, SIGNAL(found(QString&)),
+                    this->model, SLOT(addFtp(QString&)));
+    s->scan();
 }
 
 void Burgos::closeEvent(QCloseEvent *event)

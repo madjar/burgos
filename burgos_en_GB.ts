@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="en">
+<defaultcodec></defaultcodec>
 <context>
     <name>Burgos</name>
     <message>
@@ -13,17 +14,17 @@
         <translation>Burgos is running</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="106"/>
+        <location filename="burgos.cpp" line="122"/>
         <source>Burgos is now reduced</source>
         <translation>Burgos is now reduced</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="162"/>
+        <location filename="burgos.cpp" line="178"/>
         <source>&amp;Open</source>
         <translation>&amp;Open</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="164"/>
+        <location filename="burgos.cpp" line="180"/>
         <source>&amp;Close</source>
         <translation>&amp;Close</translation>
     </message>
@@ -33,12 +34,12 @@
         <translation>Tree View</translation>
     </message>
     <message>
-        <location filename="burgos.ui" line="52"/>
+        <location filename="burgos.ui" line="59"/>
         <source>Peer View</source>
         <translation>Peer View</translation>
     </message>
     <message>
-        <location filename="burgos.ui" line="65"/>
+        <location filename="burgos.ui" line="72"/>
         <source>Log View</source>
         <translation>Log View</translation>
     </message>
@@ -48,9 +49,14 @@
         <translation>Quick, catch it before it gets too far.</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="107"/>
+        <location filename="burgos.cpp" line="123"/>
         <source>Burgos is still running and refreshing the list of ftps</source>
         <translation>ENLARGE YOUR BURGOS</translation>
+    </message>
+    <message>
+        <location filename="burgos.ui" line="43"/>
+        <source>Scan</source>
+        <translation>Scan</translation>
     </message>
 </context>
 <context>

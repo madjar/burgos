@@ -28,17 +28,6 @@ int main(int argc, char *argv[])
     qDebug("Burgos started");
     burgos.show();
 
-    //Scanning
-    ScanFtp *s = new ScanFtp();
-    QObject::connect(s, SIGNAL(maximumChanged(int)),
-                   &burgos, SIGNAL(setProgressBarMaximum(int)));
-    QObject::connect(s, SIGNAL(progressChanged(int)),
-                   &burgos, SIGNAL(setProgressBarValue(int)));
-    QObject::connect (s, SIGNAL(found(QString&)),
-                    burgos.model, SLOT(addFtp(QString&)));
-    s->scan();
-
-
     qDebug("Starting app");
     return app.exec();
 }

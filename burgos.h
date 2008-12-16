@@ -32,6 +32,8 @@ signals:
 
 public slots:
     void textEdited(const QString &);
+    void scan();
+
     void closeEvent(QCloseEvent *);
 
     void fakeClose();
