@@ -1,8 +1,9 @@
-Makefile
-Makefile.Debug
-Makefile.Release
-burgos
-burgos.pro.user
-debug
-release
-ui_burgos.h
+./Makefile
+./Makefile.Debug
+./Makefile.Release
+./burgos
+./burgos.pro.user
+./debug
+./release
+ui_*.h
+*.qm
