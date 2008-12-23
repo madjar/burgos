@@ -3,7 +3,8 @@
 ./Makefile.Release
 ./burgos
 ./burgos.pro.user
-./debug
-./release
+./debug/
+./release/
 ui_*.h
 *.qm
+./qtc-gdbmacros/
