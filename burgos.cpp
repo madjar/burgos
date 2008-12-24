@@ -29,13 +29,14 @@ Burgos::Burgos(QWidget *parent) :
     this->setWindowIcon(*this->icon);
     this->setWindowTitle(tr("Burgos"));
 
+    //Configuration du tray
     if (QSystemTrayIcon::isSystemTrayAvailable())
     {
         this->createActions();
         this->createTrayIcon();
         this->trayIcon->show();
         connect(this->trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-                this, SLOT(fakeOpen(QSystemTrayIcon::ActivationReason)));
+                this, SLOT(hideShow(QSystemTrayIcon::ActivationReason)));
         if (QSystemTrayIcon::supportsMessages())
             this->trayIcon->showMessage(tr("Burgos is running"),
                                         tr("Anyway, this message is going to disapear sonner or latter."),
@@ -84,6 +85,8 @@ Burgos::Burgos(QWidget *parent) :
 Burgos::~Burgos()
 {
     delete m_ui;
+    if (icon)
+        delete icon;
 }
 
 void Burgos::textEdited(const QString &string)
@@ -117,7 +120,7 @@ void Burgos::closeEvent(QCloseEvent *event)
 {
     if (QSystemTrayIcon::isSystemTrayAvailable())
     {
-        this->fakeClose();
+        this->hideShow();
         if (QSystemTrayIcon::supportsMessages())
             this->trayIcon->showMessage(tr("Burgos is now reduced"),
                                         tr("Burgos is still running and refreshing the list of ftps"),
@@ -130,30 +133,26 @@ void Burgos::closeEvent(QCloseEvent *event)
     }
 }
 
-void Burgos::fakeClose()
-{
-    this->trayIcon->setContextMenu(this->trayIconMenu);
-    this->showMinimized();
-    this->hide();
-}
-
-void Burgos::fakeOpen()
-{
-    this->trayIcon->setContextMenu(this->trayMiniIconMenu);
-    this->show();
-    this->showNormal();
-    this->activateWindow();
-}
-
-void Burgos::fakeOpen(QSystemTrayIcon::ActivationReason reason)
+void Burgos::hideShow(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::DoubleClick ||
         reason == QSystemTrayIcon::Trigger ||
-        reason == QSystemTrayIcon::MiddleClick)
+        reason == QSystemTrayIcon::MiddleClick ||
+        reason == QSystemTrayIcon::Unknown)
     {
-        this->trayIcon->setContextMenu(this->trayMiniIconMenu);
-        this->show();
-        this->showNormal();
+        if (this->isMinimized())
+        {
+            this->hideShowAction->setText(tr("&Hide"));
+            this->show();
+            this->showNormal();
+            this->activateWindow();
+        }
+        else
+        {
+            this->hideShowAction->setText(tr("&Show"));
+            this->showMinimized();
+            this->hide();
+        }
     }
 }
 
@@ -170,26 +169,23 @@ void Burgos::changeEvent(QEvent *event)
 
 void Burgos::createIcon()
 {
-    this->icon = new QIcon(QPixmap(":/icons/computer.png"));
+    this->icon = new QIcon(":/icons/computer.png");
 }
 
 void Burgos::createActions()
 {
-    this->restoreAction = new QAction(tr("&Open"), this);
-    connect(this->restoreAction, SIGNAL(triggered()), this, SLOT(fakeOpen()));
-    this->quitAction = new QAction(tr("&Close"), this);
+    this->hideShowAction = new QAction(tr("&Hide"), this);
+    connect(this->hideShowAction, SIGNAL(triggered()), this, SLOT(hideShow()));
+    this->quitAction = new QAction(tr("&Quit"), this);
     connect(this->quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
 void Burgos::createTrayIcon()
 {
     this->trayIconMenu = new QMenu(this);
-    this->trayIconMenu->addAction(this->restoreAction);
-    //this->trayIconMenu->addSeparator();
+    this->trayIconMenu->addAction(this->hideShowAction);
     this->trayIconMenu->addAction(this->quitAction);
-    this->trayMiniIconMenu = new QMenu(this);
-    this->trayMiniIconMenu->addAction(this->quitAction);
     this->trayIcon = new QSystemTrayIcon(this);
-    this->trayIcon->setContextMenu(this->trayMiniIconMenu);
+    this->trayIcon->setContextMenu(this->trayIconMenu);
     this->trayIcon->setIcon(QIcon(*this->icon));
 }

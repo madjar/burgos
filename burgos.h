@@ -36,9 +36,7 @@ public slots:
 
     void closeEvent(QCloseEvent *);
 
-    void fakeClose();
-    void fakeOpen();
-    void fakeOpen(QSystemTrayIcon::ActivationReason);
+    void hideShow(QSystemTrayIcon::ActivationReason reason = QSystemTrayIcon::Unknown);
 
 protected:
     virtual void changeEvent(QEvent *e);
@@ -49,13 +47,10 @@ protected:
 private:
     QIcon *icon;
 
-    QAction *minimizeAction;
-    QAction *maximizeAction;
-    QAction *restoreAction;
+    QAction *hideShowAction;
     QAction *quitAction;
 
     QMenu *trayIconMenu;
-    QMenu *trayMiniIconMenu;
 
     QSystemTrayIcon *trayIcon;
 

@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr">
+<defaultcodec></defaultcodec>
 <context>
     <name>Burgos</name>
     <message>
-        <location filename="burgos.ui" line="13"/>
+        <location filename="burgos.ui" line="14"/>
         <source>Burgos</source>
-        <translation></translation>
+        <translation>Burgos</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="40"/>
+        <location filename="burgos.cpp" line="41"/>
         <source>Burgos is running</source>
         <translation>Burgos est lancé</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="122"/>
+        <location filename="burgos.cpp" line="125"/>
         <source>Burgos is now reduced</source>
         <translation>Burgos est maintenant réduit</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="178"/>
-        <source>&amp;Open</source>
-        <translation>&amp;Ouvrir</translation>
-    </message>
-    <message>
-        <location filename="burgos.cpp" line="180"/>
-        <source>&amp;Close</source>
-        <translation>&amp;Quitter</translation>
-    </message>
-    <message>
-        <location filename="burgos.ui" line="26"/>
-        <source>Tree View</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="burgos.ui" line="59"/>
-        <source>Peer View</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="burgos.ui" line="72"/>
-        <source>Log View</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="burgos.cpp" line="41"/>
+        <location filename="burgos.cpp" line="42"/>
         <source>Anyway, this message is going to disapear sonner or latter.</source>
         <translation>Et c&apos;est tray bien.</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="123"/>
+        <location filename="burgos.cpp" line="126"/>
         <source>Burgos is still running and refreshing the list of ftps</source>
         <translation>Burgos continue de tourner en tâche de fond pour actualiser la liste des ftp</translation>
     </message>
     <message>
-        <location filename="burgos.ui" line="43"/>
+        <location filename="burgos.ui" line="41"/>
         <source>Scan</source>
         <translation>Scanner</translation>
+    </message>
+    <message>
+        <location filename="burgos.cpp" line="177"/>
+        <source>&amp;Hide</source>
+        <translation>&amp;Cacher</translation>
+    </message>
+    <message>
+        <location filename="burgos.cpp" line="152"/>
+        <source>&amp;Show</source>
+        <translation>&amp;Afficher</translation>
+    </message>
+    <message>
+        <location filename="burgos.cpp" line="179"/>
+        <source>&amp;Quit</source>
+        <translation>&amp;Quitter</translation>
+    </message>
+    <message>
+        <location filename="burgos.ui" line="27"/>
+        <source>&amp;FTP servers</source>
+        <translation>Serveurs &amp;FTP</translation>
+    </message>
+    <message>
+        <location filename="burgos.ui" line="57"/>
+        <source>&amp;Peers</source>
+        <translation>&amp;Pairs</translation>
+    </message>
+    <message>
+        <location filename="burgos.ui" line="70"/>
+        <source>&amp;Log</source>
+        <translation>&amp;Historique</translation>
     </message>
 </context>
 <context>

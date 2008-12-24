@@ -3,59 +3,64 @@
 <context>
     <name>Burgos</name>
     <message>
-        <location filename="burgos.ui" line="13"/>
+        <location filename="burgos.ui" line="14"/>
         <source>Burgos</source>
         <translation>Burgos</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="40"/>
+        <location filename="burgos.cpp" line="41"/>
         <source>Burgos is running</source>
         <translation>Burgos is running</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="122"/>
+        <location filename="burgos.cpp" line="125"/>
         <source>Burgos is now reduced</source>
         <translation>Burgos is now reduced</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="178"/>
-        <source>&amp;Open</source>
-        <translation>&amp;Open</translation>
-    </message>
-    <message>
-        <location filename="burgos.cpp" line="180"/>
-        <source>&amp;Close</source>
-        <translation>&amp;Close</translation>
-    </message>
-    <message>
-        <location filename="burgos.ui" line="26"/>
-        <source>Tree View</source>
-        <translation>Tree View</translation>
-    </message>
-    <message>
-        <location filename="burgos.ui" line="59"/>
-        <source>Peer View</source>
-        <translation>Peer View</translation>
-    </message>
-    <message>
-        <location filename="burgos.ui" line="72"/>
-        <source>Log View</source>
-        <translation>Log View</translation>
-    </message>
-    <message>
-        <location filename="burgos.cpp" line="41"/>
+        <location filename="burgos.cpp" line="42"/>
         <source>Anyway, this message is going to disapear sonner or latter.</source>
         <translation>Quick, catch it before it gets too far.</translation>
     </message>
     <message>
-        <location filename="burgos.cpp" line="123"/>
+        <location filename="burgos.cpp" line="126"/>
         <source>Burgos is still running and refreshing the list of ftps</source>
         <translation>ENLARGE YOUR BURGOS</translation>
     </message>
     <message>
-        <location filename="burgos.ui" line="43"/>
+        <location filename="burgos.ui" line="41"/>
         <source>Scan</source>
         <translation>Scan</translation>
+    </message>
+    <message>
+        <location filename="burgos.cpp" line="177"/>
+        <source>&amp;Hide</source>
+        <translation>&amp;Hide</translation>
+    </message>
+    <message>
+        <location filename="burgos.cpp" line="152"/>
+        <source>&amp;Show</source>
+        <translation>&amp;Show</translation>
+    </message>
+    <message>
+        <location filename="burgos.cpp" line="179"/>
+        <source>&amp;Quit</source>
+        <translation>&amp;Quit</translation>
+    </message>
+    <message>
+        <location filename="burgos.ui" line="27"/>
+        <source>&amp;FTP servers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="burgos.ui" line="57"/>
+        <source>&amp;Peers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="burgos.ui" line="70"/>
+        <source>&amp;Log</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
