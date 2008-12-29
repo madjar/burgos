@@ -1,6 +1,6 @@
 #include "node.h"
 
-Node::Node() : parent(0)
+Node::Node() : parent_(0)
 {
 }
 
@@ -27,5 +27,25 @@ QVariant Node::data(int /*column*/, int /*role*/)
 void Node::addChild(Node *child)
 {
     children.append(child);
-    child->parent=this;
+    child->parent_=this;
+}
+
+int Node::nbChildren()
+{
+    return children.size();
+}
+
+Node *Node::childNode(int row)
+{
+    return children.value(row);
+}
+
+Node *Node::parent()
+{
+    return parent_;
+}
+
+int Node::indexOfChild(Node *child)
+{
+    return children.indexOf(child);
 }

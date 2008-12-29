@@ -12,8 +12,13 @@ public:
 
     virtual QVariant data(int column, int role);
     void addChild(Node *child);
+    int nbChildren();
+    Node *childNode(int row);
+    Node *parent();
+    int indexOfChild(Node* child);
 
-    Node *parent;
+protected:
+    Node *parent_;
     QList<Node *> children;
 };
 

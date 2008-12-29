@@ -25,7 +25,7 @@ void Model::setRootNode(Node *node)
 
 void Model::addFtp(QString &host)
 {
-    int pos = rootNode->children.size();
+    int pos = rootNode->nbChildren();
     beginInsertRows(QModelIndex(), pos, pos);
     Ftp *ftp = new Ftp(host);
     rootNode->addChild(ftp);
@@ -39,7 +39,7 @@ QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
     if (!rootNode || row < 0 || column < 0)
         return QModelIndex();
     Node *parentNode = nodeFromIndex(parent);
-    Node *childNode = parentNode->children.value(row);
+    Node *childNode = parentNode->childNode(row);
     if (!childNode)
         return QModelIndex();
     return createIndex(row, column, childNode);
@@ -50,14 +50,14 @@ QModelIndex Model::parent(const QModelIndex &child) const
     Node *node = nodeFromIndex(child);
     if (!node)
         return QModelIndex();
-    Node *parentNode = node->parent;
+    Node *parentNode = node->parent();
     if (!parentNode)
         return QModelIndex();
-    Node *grandparentNode = parentNode->parent;
+    Node *grandparentNode = parentNode->parent();
     if (!grandparentNode)
         return QModelIndex();
 
-    int row = grandparentNode->children.indexOf(parentNode);
+    int row = grandparentNode->indexOfChild(parentNode);
     return createIndex(row, 0, parentNode);
 }
 
@@ -68,7 +68,7 @@ int Model::rowCount(const QModelIndex &parent) const
     Node *parentNode = nodeFromIndex(parent);
     if (!parentNode)
         return 0;
-    return parentNode->children.count();
+    return parentNode->nbChildren();
 }
 
 int Model::columnCount(const QModelIndex & /* parent */) const
@@ -115,10 +115,10 @@ QModelIndex Model::indexFromNode(Node *node, int column)
 {
     if (!node)
         return QModelIndex();
-    Node *parentNode = node->parent;
+    Node *parentNode = node->parent();
     if (!parentNode)
         return QModelIndex();
 
-    int row = parentNode->children.indexOf(node);
+    int row = parentNode->indexOfChild(node);
     return createIndex(row, column, parentNode);
 }
