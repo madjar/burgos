@@ -4,14 +4,13 @@
 #include <QPixmap>
 #include <QtNetwork>
 
-#include "node.h"
-#include "file.h"
 
 #include <QtDebug>
 
-Ftp::Ftp(QString host) : QObject(), File(QUrlInfo())
+Ftp::Ftp(QString host, QDomDocument doc) : QObject(), doc(doc), root(doc.createElement("ftp")), hostString(host)
 {
-    hostString=host;
+    root.setAttribute("hostname", host);
+    doc.appendChild(root);
     connect (&ftp, SIGNAL(done(bool)),
              this, SLOT(ftpDone(bool)));
     connect (&ftp, SIGNAL(listInfo(const QUrlInfo &)),
@@ -58,8 +57,8 @@ QVariant Ftp::data(int column, int role)
     {
     case 0:
         return host.hostName();
-    case 1:
-        return File::humanReadableSize(size());
+    //case 1:
+        //return File::humanReadableSize(size()); //TODO
     }
     return QVariant();
 }
@@ -68,7 +67,7 @@ void Ftp::updateIndex()
 {
     ftp.login("anonymous","burgosIndexing");
 
-    pendingDirs[QString("/")]=this;
+    pendingDirs[QString("/")]=root;
     processNextDirectory();
 }
 
@@ -76,7 +75,7 @@ void Ftp::processNextDirectory()
 {
     if (!pendingDirs.isEmpty()) {
         currentDir = pendingDirs.keys().first();
-        currentFile = pendingDirs.value(currentDir);
+        currentNode = pendingDirs.value(currentDir);
         pendingDirs.remove(currentDir);
 
         ftp.cd(currentDir);
@@ -84,6 +83,8 @@ void Ftp::processNextDirectory()
     } else {
         emit done();
         ftp.close();
+        QTextStream out(stdout, QIODevice::WriteOnly);
+        doc.save(out,4);
     }
 }
 
@@ -91,12 +92,17 @@ void Ftp::ftpListInfo(const QUrlInfo &urlInfo)
 {
     if (urlInfo.name()=="." || urlInfo.name()=="..")
         return;
-    File *f = new File(urlInfo);
-    currentFile->addChild(f);
+    QDomElement el = doc.createElement("file");
+    el.setAttribute("name", urlInfo.name());
+    el.setAttribute("size", urlInfo.size());
+    currentNode.appendChild(el);
     if (urlInfo.isDir() && !urlInfo.isSymLink())
     //if (urlInfo.isDir())
-        pendingDirs[currentDir+'/'+urlInfo.name()] = f;
-    emit modified(f);
+    {
+        el.setTagName("dir");
+        pendingDirs[currentDir+'/'+urlInfo.name()] = el;
+    }
+    emit modified(el);
 }
 
 void Ftp::ftpDone(bool error)

@@ -1,53 +1,50 @@
 #include <QtCore>
 
 #include "model.h"
-#include "node.h"
 #include "ftp.h"
 
 #include <QtDebug>
 
-Model::Model(QObject *parent) : QAbstractItemModel(parent)
+Model::Model(QObject *parent) : QAbstractItemModel(parent), document(QDomDocument("ftp index"))
 {
-    rootNode = new Node();
 }
 
 Model::~Model()
 {
-    delete rootNode;
 }
 
-void Model::setRootNode(Node *node)
+/*void Model::setRootNode(QDomNode node)
 {
-    delete rootNode;
     rootNode = node;
     reset();
-}
+}*/
 
 void Model::addFtp(QString &host)
 {
-    int pos = rootNode->nbChildren();
+    int pos = list.size();
     beginInsertRows(QModelIndex(), pos, pos);
-    Ftp *ftp = new Ftp(host);
-    rootNode->addChild(ftp);
-    connect(ftp,SIGNAL(modified(Node*)),
-            this, SLOT(nodeUpdated(Node*)));
+    Ftp *ftp = new Ftp(host, document);
+    list.append(ftp);
+    connect(ftp,SIGNAL(modified(QDomNode)),
+            this, SLOT(nodeUpdated(QDomNode)));
     endInsertRows();
 }
 
 QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
 {
-    if (!rootNode || row < 0 || column < 0)
+    /*if (!rootNode || row < 0 || column < 0)
         return QModelIndex();
     Node *parentNode = nodeFromIndex(parent);
     Node *childNode = parentNode->childNode(row);
     if (!childNode)
         return QModelIndex();
-    return createIndex(row, column, childNode);
+    return createIndex(row, column, childNode);*/
+    return QModelIndex();
 }
 
 QModelIndex Model::parent(const QModelIndex &child) const
 {
-    Node *node = nodeFromIndex(child);
+    /*Node *node = nodeFromIndex(child);
     if (!node)
         return QModelIndex();
     Node *parentNode = node->parent();
@@ -58,17 +55,19 @@ QModelIndex Model::parent(const QModelIndex &child) const
         return QModelIndex();
 
     int row = grandparentNode->indexOfChild(parentNode);
-    return createIndex(row, 0, parentNode);
+    return createIndex(row, 0, parentNode);*/
+    return QModelIndex();
 }
 
 int Model::rowCount(const QModelIndex &parent) const
 {
-    if (parent.column() > 0)
+    /*if (parent.column() > 0)
         return 0;
     Node *parentNode = nodeFromIndex(parent);
     if (!parentNode)
         return 0;
-    return parentNode->nbChildren();
+    return parentNode->nbChildren();*/
+    return 0;
 }
 
 int Model::columnCount(const QModelIndex & /* parent */) const
@@ -78,11 +77,12 @@ int Model::columnCount(const QModelIndex & /* parent */) const
 
 QVariant Model::data(const QModelIndex &index, int role) const
 {
-    Node *node = nodeFromIndex(index);
+    /*Node *node = nodeFromIndex(index);
     if (!node)
         return QVariant();
 
-    return node->data(index.column(), role);
+    return node->data(index.column(), role);*/
+    return QVariant();
 }
 
 QVariant Model::headerData(int section,  Qt::Orientation orientation, int role) const
@@ -97,28 +97,30 @@ QVariant Model::headerData(int section,  Qt::Orientation orientation, int role) 
     return QVariant();
 }
 
-void Model::nodeUpdated(Node *node)
+void Model::nodeUpdated(QDomNode node)
 {
-    emit dataChanged(indexFromNode(node, 0), indexFromNode(node, 1));
+    //emit dataChanged(indexFromNode(node, 0), indexFromNode(node, 1));
 }
 
-Node *Model::nodeFromIndex(const QModelIndex &index) const
+QDomNode Model::nodeFromIndex(const QModelIndex &index) const
 {
-    if (index.isValid()) {
+    /*if (index.isValid()) {
         return static_cast<Node *>(index.internalPointer());
     } else {
         return rootNode;
-    }
+    }*/
+    return QDomNode();
 }
 
-QModelIndex Model::indexFromNode(Node *node, int column)
+QModelIndex Model::indexFromNode(QDomNode node, int column)
 {
-    if (!node)
+    /*if (!node)
         return QModelIndex();
     Node *parentNode = node->parent();
     if (!parentNode)
         return QModelIndex();
 
     int row = parentNode->indexOfChild(node);
-    return createIndex(row, column, parentNode);
+    return createIndex(row, column, parentNode);*/
+    return QModelIndex();
 }

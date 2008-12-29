@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QAbstractItemModel>
 #include <QString>
+#include <QDomNode>
+#include <QDomDocument>
+
+#include "ftp.h"
 
 class Node;
 
@@ -14,7 +18,7 @@ public:
     Model(QObject *parent = 0);
     ~Model();
 
-    void setRootNode(Node *node);
+    //void setRootNode(QDomNode node);
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent) const;
@@ -29,12 +33,14 @@ public slots:
     void addFtp(QString &host);
 
 private slots:
-    void nodeUpdated(Node *node);
+    void nodeUpdated(QDomNode node);
 
 private:
-    Node *nodeFromIndex(const QModelIndex &index) const;
-    QModelIndex indexFromNode(Node *node, int column);
-    Node *rootNode;
+    QDomNode nodeFromIndex(const QModelIndex &index) const;
+    QModelIndex indexFromNode(QDomNode node, int column);
+
+    QList<Ftp*> list;
+    QDomDocument document;
 };
 
 #endif // BURGOSMODEL_H

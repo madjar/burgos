@@ -1,19 +1,21 @@
 #ifndef FTP_H
 #define FTP_H
 
-#include "file.h"
 #include <QHostInfo>
 #include <QObject>
 #include <QFtp>
+#include <QDomNode>
+#include <QDomDocument>
+
 class QString;
 class QUrlInfo;
 
-class Ftp : public QObject, public File
+class Ftp : public QObject
 {
     Q_OBJECT
 
 public:
-    Ftp(QString host);
+    Ftp(QString host, QDomDocument doc);
 
     QVariant data(int column, int role);
 
@@ -21,7 +23,7 @@ public slots:
     void updateIndex();
 
 signals:
-    void modified(Node *node);
+    void modified(QDomNode);
     void done();
 
 private slots:
@@ -33,13 +35,15 @@ private slots:
 private:
     QHostInfo host;
     QString hostString;
+    QDomDocument doc;
+    QDomElement root;
 
     void suicide();
     void processNextDirectory();
     QFtp ftp;
     QString currentDir;
-    File *currentFile;
-    QMap<QString, File*> pendingDirs;
+    QDomNode currentNode;
+    QMap<QString, QDomNode> pendingDirs;
 };
 
 #endif // FTP_H

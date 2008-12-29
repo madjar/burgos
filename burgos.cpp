@@ -1,7 +1,6 @@
 #include "burgos.h"
 #include "ui_burgos.h"
 #include "model.h"
-#include "node.h"
 #include "ftp.h"
 #include "proxymodel.h"
 #include "scanftp.h"
