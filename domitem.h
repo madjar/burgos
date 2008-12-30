@@ -3,6 +3,7 @@
 
 #include <QDomNode>
 #include <QHash>
+#include <QString>
 
 class DomItem
 {
@@ -13,6 +14,9 @@ public:
     DomItem *parent();
     QDomNode node() const;
     int row();
+
+    QDomElement element() const;
+    DomItem *newChild(QString tagName);
 
 private:
     QDomNode domNode;

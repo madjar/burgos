@@ -47,3 +47,19 @@ int DomItem::row()
 {
     return rowNumber;
 }
+
+//Ça, c'est de moi (ça se voit)
+QDomElement DomItem::element() const
+{
+    return domNode.toElement();
+}
+
+DomItem *DomItem::newChild(QString tagName)
+{
+    QDomNode newNode = domNode.ownerDocument().createElement(tagName);
+    int i = domNode.childNodes().count(); //Position à laquelle on ajoute le QDomNode, ie sa ligne.
+    domNode.appendChild(newNode);
+    DomItem *newItem = new DomItem(newNode, i, this);
+    childItems[i] = newItem;
+    return newItem;
+}

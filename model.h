@@ -32,7 +32,9 @@ public slots:
     void addFtp(QString &host);
 
 private slots:
-    void nodeUpdated(QDomNode &node);
+    void itemUpdated(DomItem *item);
+    void beginNewChild(DomItem* item);
+    void endNewChild();
 
 private:
     static quint64 recursiveSize(QDomNode node);

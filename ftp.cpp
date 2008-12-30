@@ -1,4 +1,5 @@
 #include "ftp.h"
+#include "domitem.h"
 
 #include <QtCore>
 #include <QPixmap>
@@ -7,10 +8,11 @@
 
 #include <QtDebug>
 
-Ftp::Ftp(QString host, QDomDocument doc) : QObject(), hostString(host), doc(doc), root(doc.createElement("ftp"))
+Ftp::Ftp(QString host, DomItem* parent) : QObject(), hostString(host)
 {
-    root.setAttribute("name", host);
-    doc.firstChild().appendChild(root);
+    root = parent->newChild("ftp");
+    root->element().setAttribute("name", host);
+
     connect (&ftp, SIGNAL(done(bool)),
              this, SLOT(ftpDone(bool)));
     connect (&ftp, SIGNAL(listInfo(const QUrlInfo &)),
@@ -21,6 +23,7 @@ Ftp::Ftp(QString host, QDomDocument doc) : QObject(), hostString(host), doc(doc)
     qDebug()<<host<<"connected";
 }
 
+//Faire le lookup dans le constructeur
 void Ftp::ftpStateChanged(int state)
 {
     if (state == QFtp::Connected)
@@ -40,30 +43,8 @@ void Ftp::setHost(QHostInfo host)
         return;
     }
     this->host=host;
-    root.setAttribute("name", host.hostName());
+    root->element().setAttribute("name", host.hostName());
     emit modified(root);
-}
-
-//TODO à dégommer
-QVariant Ftp::data(int column, int role)
-{
-    if (role == Qt::TextAlignmentRole && column == 1)
-        return Qt::AlignRight;
-
-    if (role == Qt::DecorationRole && column == 0)
-        return QPixmap(":/icons/computer.png");
-
-    if (role != Qt::DisplayRole && role != Qt::ToolTipRole)
-        return QVariant();
-
-    switch (column)
-    {
-    case 0:
-        return host.hostName();
-    //case 1:
-        //return File::humanReadableSize(size()); //TODO
-    }
-    return QVariant();
 }
 
 void Ftp::updateIndex()
@@ -86,8 +67,6 @@ void Ftp::processNextDirectory()
     } else {
         emit done();
         ftp.close();
-//        QTextStream out(stdout, QIODevice::WriteOnly);
-//        doc.save(out,4);
     }
 }
 
@@ -95,17 +74,19 @@ void Ftp::ftpListInfo(const QUrlInfo &urlInfo)
 {
     if (urlInfo.name()=="." || urlInfo.name()=="..")
         return;
-    QDomElement el = doc.createElement("file");
-    el.setAttribute("name", urlInfo.name());
-    el.setAttribute("size", urlInfo.size());
-    currentNode.appendChild(el);
+    emit beginNewChild(currentNode);
+    DomItem *item = currentNode->newChild("file");
+    item->element().setAttribute("name", urlInfo.name());
+    item->element().setAttribute("size", urlInfo.size());
     if (urlInfo.isDir() && !urlInfo.isSymLink())
-    //if (urlInfo.isDir())
     {
-        el.setTagName("dir");
-        pendingDirs[currentDir+'/'+urlInfo.name()] = el;
+        item->element().setTagName("dir");
+        emit endNewChild();
+        pendingDirs[currentDir+'/'+urlInfo.name()] = item;
     }
-    emit modified(el);
+    else
+        emit endNewChild();
+    emit modified(item);
 }
 
 void Ftp::ftpDone(bool error)

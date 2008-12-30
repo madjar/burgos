@@ -9,21 +9,22 @@
 
 class QString;
 class QUrlInfo;
+class DomItem;
 
 class Ftp : public QObject
 {
     Q_OBJECT
 
 public:
-    Ftp(QString host, QDomDocument doc);
-
-    QVariant data(int column, int role);
+    Ftp(QString host, DomItem *doc);
     
 public slots:
     void updateIndex();
 
 signals:
-    void modified(QDomNode&);
+    void modified(DomItem*);
+    void beginNewChild(DomItem*);
+    void endNewChild();
     void done();
 
 private slots:
@@ -35,15 +36,15 @@ private slots:
 private:
     QHostInfo host;
     QString hostString;
-    QDomDocument doc;
-    QDomElement root;
+    //QDomDocument doc;
+    DomItem *root;
 
     void suicide();
     void processNextDirectory();
     QFtp ftp;
     QString currentDir;
-    QDomNode currentNode;
-    QMap<QString, QDomNode> pendingDirs;  
+    DomItem *currentNode;
+    QMap<QString, DomItem*> pendingDirs;
 };
 
 #endif // FTP_H

@@ -25,11 +25,15 @@ void Model::addFtp(QString &host)
 {
     int pos = list.size();
     beginInsertRows(QModelIndex(), pos, pos);
-    Ftp *ftp = new Ftp(host, domDocument);
+    Ftp *ftp = new Ftp(host, rootItem);
     list.append(ftp);
-    connect(ftp,SIGNAL(modified(QDomNode &)),
-            this, SLOT(nodeUpdated(QDomNode &)));
     endInsertRows();
+    connect(ftp,SIGNAL(modified(DomItem*)),
+            this, SLOT(itemUpdated(DomItem*)));
+    connect(ftp, SIGNAL(beginNewChild(DomItem*)),
+            this, SLOT(beginNewChild(DomItem*)));
+    connect(ftp, SIGNAL(endNewChild()),
+            this, SLOT(endNewChild()));
 }
 
 QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
@@ -152,9 +156,22 @@ void Model::save()
     file.close();
 }
 
-void Model::nodeUpdated(QDomNode &/*node*/)
+void Model::itemUpdated(DomItem *item)
 {
-    //emit dataChanged(indexFromNode(node, 0), indexFromNode(node, 1));
+    emit dataChanged(createIndex(item->row(),0,item->parent()), createIndex(item->row(),1,item->parent()));
+}
+
+void Model::beginNewChild(DomItem* item)
+{
+    int row = item->node().childNodes().count(); //Emplacement de la future ligne
+    //beginInsertRows(createIndex(item->row(),0,item->parent()), row, row);
+    //Je suis pas sur ce cette ligne, mais ça marche mieux comme ça.
+    beginInsertRows(createIndex(0,0,item), row, row);
+}
+
+void Model::endNewChild()
+{
+    endInsertRows();
 }
 
 quint64 Model::recursiveSize(QDomNode node)
