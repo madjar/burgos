@@ -191,7 +191,6 @@ quint64 Model::recursiveSize(QDomNode node)
 QString Model::humanReadableSize(qint64 intSize)
 {
     static const QStringList prefix= QStringList() << "" << "K" << "M" << "G" << "T" << "P" << "E" << "Z" << "Y";
-    // TODO : potential bug if size > 1024^8
     double size=intSize;
     int exponent=0;
     while (size>1024)

@@ -102,7 +102,8 @@ void Ftp::ftpDone(bool error)
 
 void Ftp::suicide()
 {
-    //Node::parent()->children.removeAll(this); // TODO remettre ça après
+    //TODO étudier l'utilité de cette fonction et, le cas échéant, la remettre en état de marche
+    //Node::parent()->children.removeAll(this);
     deleteLater();
     qDebug()<<this->hostString<<"ne veut plus vivre";
 }

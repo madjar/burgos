@@ -36,7 +36,6 @@ private slots:
 private:
     QHostInfo host;
     QString hostString;
-    //QDomDocument doc;
     DomItem *root;
 
     void suicide();
