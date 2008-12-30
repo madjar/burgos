@@ -90,15 +90,13 @@ Burgos::~Burgos()
 
 void Burgos::textEdited(const QString &string)
 {
+    //TODO faire quelque chose de plus mieux
+    m_ui->treeView->collapseAll();
+    proxy->setFilterWildcard(string);
+
     if (string.size() >= 3)
     {
-        proxy->setFilterWildcard(string);
         m_ui->treeView->expandAll();
-    }
-    else
-    {
-        m_ui->treeView->collapseAll();
-        proxy->setFilterWildcard(string);
     }
 }
 

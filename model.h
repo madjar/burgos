@@ -33,8 +33,8 @@ public slots:
 
 private slots:
     void itemUpdated(DomItem *item);
-    void beginNewChild(DomItem* item);
-    void endNewChild();
+//    void beginNewChild(DomItem* item);
+//    void endNewChild();
 
 private:
     static quint64 recursiveSize(QDomNode node);

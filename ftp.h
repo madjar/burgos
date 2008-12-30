@@ -23,8 +23,8 @@ public slots:
 
 signals:
     void modified(DomItem*);
-    void beginNewChild(DomItem*);
-    void endNewChild();
+//    void beginNewChild(DomItem*);
+//    void endNewChild();
     void done();
 
 private slots:

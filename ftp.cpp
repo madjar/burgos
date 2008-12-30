@@ -74,18 +74,18 @@ void Ftp::ftpListInfo(const QUrlInfo &urlInfo)
 {
     if (urlInfo.name()=="." || urlInfo.name()=="..")
         return;
-    emit beginNewChild(currentNode);
+//    emit beginNewChild(currentNode);
     DomItem *item = currentNode->newChild("file");
     item->element().setAttribute("name", urlInfo.name());
     item->element().setAttribute("size", urlInfo.size());
     if (urlInfo.isDir() && !urlInfo.isSymLink())
     {
         item->element().setTagName("dir");
-        emit endNewChild();
+//        emit endNewChild();
         pendingDirs[currentDir+'/'+urlInfo.name()] = item;
     }
-    else
-        emit endNewChild();
+//    else
+//        emit endNewChild();
     emit modified(item);
 }
 

@@ -30,10 +30,10 @@ void Model::addFtp(QString &host)
     endInsertRows();
     connect(ftp,SIGNAL(modified(DomItem*)),
             this, SLOT(itemUpdated(DomItem*)));
-    connect(ftp, SIGNAL(beginNewChild(DomItem*)),
-            this, SLOT(beginNewChild(DomItem*)));
-    connect(ftp, SIGNAL(endNewChild()),
-            this, SLOT(endNewChild()));
+//    connect(ftp, SIGNAL(beginNewChild(DomItem*)),
+//            this, SLOT(beginNewChild(DomItem*)));
+//    connect(ftp, SIGNAL(endNewChild()),
+//            this, SLOT(endNewChild()));
 }
 
 QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
@@ -161,18 +161,19 @@ void Model::itemUpdated(DomItem *item)
     emit dataChanged(createIndex(item->row(),0,item->parent()), createIndex(item->row(),1,item->parent()));
 }
 
-void Model::beginNewChild(DomItem* item)
-{
-    int row = item->node().childNodes().count(); //Emplacement de la future ligne
-    //beginInsertRows(createIndex(item->row(),0,item->parent()), row, row);
-    //Je suis pas sur ce cette ligne, mais ça marche mieux comme ça.
-    beginInsertRows(createIndex(0,0,item), row, row);
-}
-
-void Model::endNewChild()
-{
-    endInsertRows();
-}
+//void Model::beginNewChild(DomItem* item)
+//{
+//    int row = item->node().childNodes().count(); //Emplacement de la future ligne
+//    //La première ligne donne des résultats vraiment inatendus
+//    beginInsertRows(createIndex(item->row(),0,item->parent()), row, row);
+//    //Je suis pas sur ce cette deuxième ligne, mais ça marche mieux comme ça.
+//    //beginInsertRows(createIndex(0,0,item), row, row);
+//}
+//
+//void Model::endNewChild()
+//{
+//    endInsertRows();
+//}
 
 quint64 Model::recursiveSize(QDomNode node)
 {
