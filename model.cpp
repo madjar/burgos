@@ -1,126 +1,189 @@
 #include <QtCore>
+#include <QPixmap>
 
 #include "model.h"
 #include "ftp.h"
+#include "domitem.h"
 
 #include <QtDebug>
 
-Model::Model(QObject *parent) : QAbstractItemModel(parent), document(QDomDocument("ftp index"))
+Model::Model(QObject *parent) : QAbstractItemModel(parent), domDocument(QDomDocument("ftp_index"))
 {
+    QDomElement domRoot = domDocument.createElement("ftp_list");
+    rootItem = new DomItem(domRoot, 0);
+    domDocument.appendChild(domRoot);
+    connect(qApp, SIGNAL(aboutToQuit()),
+            this, SLOT(save()));
 }
 
 Model::~Model()
 {
+    delete rootItem;
 }
-
-/*void Model::setRootNode(QDomNode node)
-{
-    rootNode = node;
-    reset();
-}*/
 
 void Model::addFtp(QString &host)
 {
     int pos = list.size();
     beginInsertRows(QModelIndex(), pos, pos);
-    Ftp *ftp = new Ftp(host, document);
+    Ftp *ftp = new Ftp(host, domDocument);
     list.append(ftp);
-    connect(ftp,SIGNAL(modified(QDomNode)),
-            this, SLOT(nodeUpdated(QDomNode)));
+    connect(ftp,SIGNAL(modified(QDomNode &)),
+            this, SLOT(nodeUpdated(QDomNode &)));
     endInsertRows();
 }
 
 QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
 {
-    /*if (!rootNode || row < 0 || column < 0)
+    if (!hasIndex(row, column, parent))
         return QModelIndex();
-    Node *parentNode = nodeFromIndex(parent);
-    Node *childNode = parentNode->childNode(row);
-    if (!childNode)
+
+    DomItem *parentItem;
+
+    if (!parent.isValid())
+        parentItem = rootItem;
+    else
+        parentItem = static_cast<DomItem*>(parent.internalPointer());
+
+    DomItem *childItem = parentItem->child(row);
+    if (childItem)
+        return createIndex(row, column, childItem);
+    else
         return QModelIndex();
-    return createIndex(row, column, childNode);*/
-    return QModelIndex();
 }
 
 QModelIndex Model::parent(const QModelIndex &child) const
 {
-    /*Node *node = nodeFromIndex(child);
-    if (!node)
-        return QModelIndex();
-    Node *parentNode = node->parent();
-    if (!parentNode)
-        return QModelIndex();
-    Node *grandparentNode = parentNode->parent();
-    if (!grandparentNode)
+    if (!child.isValid())
         return QModelIndex();
 
-    int row = grandparentNode->indexOfChild(parentNode);
-    return createIndex(row, 0, parentNode);*/
-    return QModelIndex();
+    DomItem *childItem = static_cast<DomItem*>(child.internalPointer());
+    DomItem *parentItem = childItem->parent();
+
+    if (!parentItem || parentItem == rootItem)
+        return QModelIndex();
+
+    return createIndex(parentItem->row(), 0, parentItem);
 }
 
 int Model::rowCount(const QModelIndex &parent) const
 {
-    /*if (parent.column() > 0)
+    if (parent.column() > 0)
         return 0;
-    Node *parentNode = nodeFromIndex(parent);
-    if (!parentNode)
-        return 0;
-    return parentNode->nbChildren();*/
-    return 0;
+
+    DomItem *parentItem;
+
+    if (!parent.isValid())
+        parentItem = rootItem;
+    else
+        parentItem = static_cast<DomItem*>(parent.internalPointer());
+
+    return parentItem->node().childNodes().count();
+}
+QVariant Model::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::TextAlignmentRole && index.column() == 1)
+        return Qt::AlignRight;
+
+    if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::DecorationRole)
+        return QVariant();
+
+    DomItem *item = static_cast<DomItem*>(index.internalPointer());
+
+    QDomNode node = item->node();
+    switch (role)
+    {
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole:
+        switch (index.column())
+        {
+        case 0:
+            return node.attributes().namedItem("name").nodeValue();
+        case 1:
+            return humanReadableSize(recursiveSize(node));
+        default:
+            return QVariant();
+        }
+    case Qt::DecorationRole:
+        if (index.column() == 0)
+        {
+            if (node.nodeName()=="ftp")
+                return QPixmap(":/icons/computer.png");
+            if (node.nodeName()=="dir")
+                return QPixmap(":/icons/directory.png");
+        }
+    }
+    return QVariant();
 }
 
 int Model::columnCount(const QModelIndex & /* parent */) const
 {
-    return 2; //TODO
-}
-
-QVariant Model::data(const QModelIndex &index, int role) const
-{
-    /*Node *node = nodeFromIndex(index);
-    if (!node)
-        return QVariant();
-
-    return node->data(index.column(), role);*/
-    return QVariant();
+    return 2;
 }
 
 QVariant Model::headerData(int section,  Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        if (section == 0) {
+        switch (section)
+        {
+        case 0:
             return tr("Name");
-        } else if (section == 1) {
+        case 1:
             return tr("Size");
-        } //TODO
+        default:
+            return QVariant();
+        }
     }
     return QVariant();
 }
 
-void Model::nodeUpdated(QDomNode node)
+void Model::save()
+{
+    const QString dir = QDir::homePath()+"/.burgos/";
+    QDir d;
+    if (!d.exists(dir))
+        d.mkdir(dir);
+    QFile file(dir + "index.xml");
+    file.open(QIODevice::WriteOnly);
+    QTextStream out(&file);
+    domDocument.save(out, 4);
+    file.close();
+}
+
+void Model::nodeUpdated(QDomNode &/*node*/)
 {
     //emit dataChanged(indexFromNode(node, 0), indexFromNode(node, 1));
 }
 
-QDomNode Model::nodeFromIndex(const QModelIndex &index) const
+quint64 Model::recursiveSize(QDomNode node)
 {
-    /*if (index.isValid()) {
-        return static_cast<Node *>(index.internalPointer());
-    } else {
-        return rootNode;
-    }*/
-    return QDomNode();
+    qint64 total=node.attributes().namedItem("size").nodeValue().toULongLong();
+
+    QDomNode child = node.firstChild();
+    while (!child.isNull())
+    {
+        total += recursiveSize(child);
+        child = child.nextSibling();
+    }
+    return total;
 }
 
-QModelIndex Model::indexFromNode(QDomNode node, int column)
-{
-    /*if (!node)
-        return QModelIndex();
-    Node *parentNode = node->parent();
-    if (!parentNode)
-        return QModelIndex();
 
-    int row = parentNode->indexOfChild(node);
-    return createIndex(row, column, parentNode);*/
-    return QModelIndex();
+QString Model::humanReadableSize(qint64 intSize)
+{
+    static const QStringList prefix= QStringList() << "" << "K" << "M" << "G" << "T" << "P" << "E" << "Z" << "Y";
+    // TODO : potential bug if size > 1024^8
+    double size=intSize;
+    int exponent=0;
+    while (size>1024)
+    {
+        size /= 1024;
+        exponent +=1;
+    }
+    if (exponent > 8)
+        return tr("Forty two");
+
+    return QString::number(size, 'f', 1) + " " + prefix.at(exponent) + "o";
 }

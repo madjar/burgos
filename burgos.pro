@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     peer.cpp \
     peermodel.cpp \
     messagehandler.cpp \
-    ftp.cpp
+    ftp.cpp \
+    domitem.cpp
 HEADERS += model.h \
     proxymodel.h \
     burgos.h \
@@ -23,7 +24,8 @@ HEADERS += model.h \
     peer.h \
     peermodel.h \
     messagehandler.h \
-    ftp.h
+    ftp.h \
+    domitem.h
 FORMS += burgos.ui
 RESOURCES += burgos.qrc
 TRANSLATIONS = burgos_fr.ts \

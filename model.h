@@ -9,7 +9,7 @@
 
 #include "ftp.h"
 
-class Node;
+class DomItem;
 
 class Model : public QAbstractItemModel
 {
@@ -17,8 +17,6 @@ class Model : public QAbstractItemModel
 public:
     Model(QObject *parent = 0);
     ~Model();
-
-    //void setRootNode(QDomNode node);
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent) const;
@@ -30,17 +28,19 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 public slots:
+    void save();
     void addFtp(QString &host);
 
 private slots:
-    void nodeUpdated(QDomNode node);
+    void nodeUpdated(QDomNode &node);
 
 private:
-    QDomNode nodeFromIndex(const QModelIndex &index) const;
-    QModelIndex indexFromNode(QDomNode node, int column);
+    static quint64 recursiveSize(QDomNode node);
+    static QString humanReadableSize(qint64 intSize);
 
     QList<Ftp*> list;
-    QDomDocument document;
+    QDomDocument domDocument;
+    DomItem *rootItem;
 };
 
 #endif // BURGOSMODEL_H

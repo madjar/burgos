@@ -7,10 +7,10 @@
 
 #include <QtDebug>
 
-Ftp::Ftp(QString host, QDomDocument doc) : QObject(), doc(doc), root(doc.createElement("ftp")), hostString(host)
+Ftp::Ftp(QString host, QDomDocument doc) : QObject(), hostString(host), doc(doc), root(doc.createElement("ftp"))
 {
-    root.setAttribute("hostname", host);
-    doc.appendChild(root);
+    root.setAttribute("name", host);
+    doc.firstChild().appendChild(root);
     connect (&ftp, SIGNAL(done(bool)),
              this, SLOT(ftpDone(bool)));
     connect (&ftp, SIGNAL(listInfo(const QUrlInfo &)),
@@ -40,8 +40,11 @@ void Ftp::setHost(QHostInfo host)
         return;
     }
     this->host=host;
+    root.setAttribute("name", host.hostName());
+    emit modified(root);
 }
 
+//TODO à dégommer
 QVariant Ftp::data(int column, int role)
 {
     if (role == Qt::TextAlignmentRole && column == 1)
@@ -83,8 +86,8 @@ void Ftp::processNextDirectory()
     } else {
         emit done();
         ftp.close();
-        QTextStream out(stdout, QIODevice::WriteOnly);
-        doc.save(out,4);
+//        QTextStream out(stdout, QIODevice::WriteOnly);
+//        doc.save(out,4);
     }
 }
 

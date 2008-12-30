@@ -18,12 +18,12 @@ public:
     Ftp(QString host, QDomDocument doc);
 
     QVariant data(int column, int role);
-
+    
 public slots:
     void updateIndex();
 
 signals:
-    void modified(QDomNode);
+    void modified(QDomNode&);
     void done();
 
 private slots:
@@ -43,7 +43,7 @@ private:
     QFtp ftp;
     QString currentDir;
     QDomNode currentNode;
-    QMap<QString, QDomNode> pendingDirs;
+    QMap<QString, QDomNode> pendingDirs;  
 };
 
 #endif // FTP_H
