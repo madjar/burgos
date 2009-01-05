@@ -75,7 +75,7 @@ void Ftp::ftpListInfo(const QUrlInfo &urlInfo)
     if (urlInfo.name()=="." || urlInfo.name()=="..")
         return;
     DomItem *item = currentNode->newChild("file");
-    item->element().setAttribute("name", urlInfo.name());
+    item->element().setAttribute("name", sanitize(urlInfo.name()));
     item->element().setAttribute("size", urlInfo.size());
     if (urlInfo.isDir() && !urlInfo.isSymLink())
     {
@@ -94,6 +94,28 @@ void Ftp::ftpDone(bool error)
     }
     if (ftp.state()!=QFtp::Unconnected)
         processNextDirectory();
+}
+
+QString Ftp::sanitize(QString string)
+{
+    // )Nettoie les chaînes obtenues par listInfo
+    // Problème vient du fait que QFtp récupère les noms de fichier en utf8 et les interprète comme de l'utf16.
+    if (string.toLatin1()!=string.toUtf8()) //Basiquement, ça veut dire "si on a un accent"
+    {
+        const ushort *in = string.utf16();
+        char *out = new char[string.length()];
+        char *ret = out;
+        while (*in)
+        {
+            if(*in>=256)
+                qWarning()<<tr("\"%1\" is not a utf8 string, behavior is not guaranteed.").arg(string);
+            *out++=(char)*in++;
+        }
+        QString sanitized = QString::fromUtf8(ret,string.length());
+        delete[] ret;
+        return sanitized;
+    }
+    return string;
 }
 
 void Ftp::suicide()

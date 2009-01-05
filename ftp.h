@@ -36,6 +36,8 @@ private:
     QString hostString;
     DomItem *root;
 
+    static QString sanitize(QString string);
+
     void suicide();
     void processNextDirectory();
     QFtp ftp;
