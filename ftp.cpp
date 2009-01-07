@@ -1,17 +1,18 @@
 #include "ftp.h"
+#include "domitem.h"
 
 #include <QtCore>
 #include <QPixmap>
 #include <QtNetwork>
 
-#include "node.h"
-#include "file.h"
 
 #include <QtDebug>
 
-Ftp::Ftp(QString host) : QObject(), File(QUrlInfo())
+Ftp::Ftp(QString host, DomItem* parent) : QObject(), hostString(host)
 {
-    hostString=host;
+    root = parent->newChild("ftp");
+    root->element().setAttribute("name", host);
+
     connect (&ftp, SIGNAL(done(bool)),
              this, SLOT(ftpDone(bool)));
     connect (&ftp, SIGNAL(listInfo(const QUrlInfo &)),
@@ -22,6 +23,7 @@ Ftp::Ftp(QString host) : QObject(), File(QUrlInfo())
     qDebug()<<host<<"connected";
 }
 
+//Faire le lookup dans le constructeur
 void Ftp::ftpStateChanged(int state)
 {
     if (state == QFtp::Connected)
@@ -41,34 +43,15 @@ void Ftp::setHost(QHostInfo host)
         return;
     }
     this->host=host;
-}
-
-QVariant Ftp::data(int column, int role)
-{
-    if (role == Qt::TextAlignmentRole && column == 1)
-        return Qt::AlignRight;
-
-    if (role == Qt::DecorationRole && column == 0)
-        return QPixmap(":/icons/computer.png");
-
-    if (role != Qt::DisplayRole && role != Qt::ToolTipRole)
-        return QVariant();
-
-    switch (column)
-    {
-    case 0:
-        return host.hostName();
-    case 1:
-        return File::humanReadableSize(size());
-    }
-    return QVariant();
+    root->element().setAttribute("name", host.hostName());
+    emit modified(root);
 }
 
 void Ftp::updateIndex()
 {
     ftp.login("anonymous","burgosIndexing");
 
-    pendingDirs[QString("/")]=this;
+    pendingDirs[QString("/")]=root;
     processNextDirectory();
 }
 
@@ -76,7 +59,7 @@ void Ftp::processNextDirectory()
 {
     if (!pendingDirs.isEmpty()) {
         currentDir = pendingDirs.keys().first();
-        currentFile = pendingDirs.value(currentDir);
+        currentNode = pendingDirs.value(currentDir);
         pendingDirs.remove(currentDir);
 
         ftp.cd(currentDir);
@@ -91,12 +74,15 @@ void Ftp::ftpListInfo(const QUrlInfo &urlInfo)
 {
     if (urlInfo.name()=="." || urlInfo.name()=="..")
         return;
-    File *f = new File(urlInfo);
-    currentFile->addChild(f);
+    DomItem *item = currentNode->newChild("file");
+    item->element().setAttribute("name", sanitize(urlInfo.name()));
+    item->element().setAttribute("size", urlInfo.size());
     if (urlInfo.isDir() && !urlInfo.isSymLink())
-    //if (urlInfo.isDir())
-        pendingDirs[currentDir+'/'+urlInfo.name()] = f;
-    emit modified(f);
+    {
+        item->element().setTagName("dir");
+        pendingDirs[currentDir+'/'+urlInfo.name()] = item;
+    }
+    emit modified(item);
 }
 
 void Ftp::ftpDone(bool error)
@@ -110,9 +96,32 @@ void Ftp::ftpDone(bool error)
         processNextDirectory();
 }
 
+QString Ftp::sanitize(QString string)
+{
+    // )Nettoie les chaînes obtenues par listInfo
+    // Problème vient du fait que QFtp récupère les noms de fichier en utf8 et les interprète comme de l'utf16.
+    if (string.toLatin1()!=string.toUtf8()) //Basiquement, ça veut dire "si on a un accent"
+    {
+        const ushort *in = string.utf16();
+        char *out = new char[string.length()];
+        char *ret = out;
+        while (*in)
+        {
+            if(*in>=256)
+                qWarning()<<tr("\"%1\" is not a utf8 string, behavior is not guaranteed.").arg(string);
+            *out++=(char)*in++;
+        }
+        QString sanitized = QString::fromUtf8(ret,string.length());
+        delete[] ret;
+        return sanitized;
+    }
+    return string;
+}
+
 void Ftp::suicide()
 {
-    Node::parent->children.removeAll(this);
+    //TODO étudier l'utilité de cette fonction et, le cas échéant, la remettre en état de marche
+    //Node::parent()->children.removeAll(this);
     deleteLater();
     qDebug()<<this->hostString<<"ne veut plus vivre";
 }

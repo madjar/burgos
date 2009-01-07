@@ -1,7 +1,6 @@
 #include "burgos.h"
 #include "ui_burgos.h"
 #include "model.h"
-#include "node.h"
 #include "ftp.h"
 #include "proxymodel.h"
 #include "scanftp.h"
@@ -91,15 +90,13 @@ Burgos::~Burgos()
 
 void Burgos::textEdited(const QString &string)
 {
+    //TODO faire quelque chose de plus mieux
+    m_ui->treeView->collapseAll();
+    proxy->setFilterWildcard(string);
+
     if (string.size() >= 3)
     {
-        proxy->setFilterWildcard(string);
         m_ui->treeView->expandAll();
-    }
-    else
-    {
-        m_ui->treeView->collapseAll();
-        proxy->setFilterWildcard(string);
     }
 }
 

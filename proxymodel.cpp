@@ -1,10 +1,9 @@
 #include "proxymodel.h"
-#include "file.h"
 #include "model.h"
+#include "domitem.h"
 
+#include <QtXml>
 #include <QSortFilterProxyModel>
-
-#include <QtDebug>
 
 ProxyModel::ProxyModel(QObject *parent) :
         QSortFilterProxyModel (parent)
@@ -15,14 +14,15 @@ ProxyModel::ProxyModel(QObject *parent) :
 bool ProxyModel::lessThan(const QModelIndex &left,
                           const QModelIndex &right) const
 {
+    DomItem *leftFile =
+            static_cast<DomItem *>(left.internalPointer());
+    DomItem *rightFile =
+            static_cast<DomItem *>(right.internalPointer());
 
-    File *leftFile =
-            static_cast<File *>(left.internalPointer());
-    File *rightFile =
-            static_cast<File *>(right.internalPointer());
-
-    if (leftFile && rightFile && leftFile->isDir()!=rightFile->isDir())
-        return leftFile->isDir();
+    if (leftFile && rightFile && (leftFile->node().nodeName()=="dir")!=(rightFile->node().nodeName()=="dir"))
+    {
+        return leftFile->node().nodeName()=="dir";
+    }
 
     return QSortFilterProxyModel::lessThan(left, right);
 }

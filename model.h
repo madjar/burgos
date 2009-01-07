@@ -4,8 +4,12 @@
 #include <QObject>
 #include <QAbstractItemModel>
 #include <QString>
+#include <QDomNode>
+#include <QDomDocument>
 
-class Node;
+#include "ftp.h"
+
+class DomItem;
 
 class Model : public QAbstractItemModel
 {
@@ -13,8 +17,6 @@ class Model : public QAbstractItemModel
 public:
     Model(QObject *parent = 0);
     ~Model();
-
-    void setRootNode(Node *node);
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent) const;
@@ -26,15 +28,19 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 public slots:
+    void save();
     void addFtp(QString &host);
 
 private slots:
-    void nodeUpdated(Node *node);
+    void itemUpdated(DomItem *item);
 
 private:
-    Node *nodeFromIndex(const QModelIndex &index) const;
-    QModelIndex indexFromNode(Node *node, int column);
-    Node *rootNode;
+    static quint64 recursiveSize(QDomNode node);
+    static QString humanReadableSize(qint64 intSize);
+
+    QList<Ftp*> list;
+    QDomDocument domDocument;
+    DomItem *rootItem;
 };
 
 #endif // BURGOSMODEL_H

@@ -1,10 +1,6 @@
 #include <QtCore>
 #include <QtGui>
 #include <QLocale>
-#include "ftp.h"
-#include "model.h"
-#include "node.h"
-#include "proxymodel.h"
 #include "burgos.h"
 #include "messagehandler.h"
 
