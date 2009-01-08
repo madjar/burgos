@@ -1,5 +1,5 @@
 #include "proxymodel.h"
-#include "model.h"
+#include "ftpmodel.h"
 #include "domitem.h"
 
 #include <QtXml>

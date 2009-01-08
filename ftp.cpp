@@ -2,7 +2,6 @@
 #include "domitem.h"
 
 #include <QtCore>
-#include <QPixmap>
 #include <QtNetwork>
 
 

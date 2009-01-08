@@ -7,7 +7,7 @@
 #include <QtGui/QIcon>
 #include <QtGui/QMenu>
 #include <QtGui/QSystemTrayIcon>
-#include "model.h"
+#include "ftpmodel.h"
 #include "proxymodel.h"
 #include "peermodel.h"
 
@@ -23,7 +23,7 @@ public:
     explicit Burgos(QWidget *parent = 0);
     virtual ~Burgos();
 
-    Model *model;
+    FtpModel *model;
 
     //Ces slots vont peter quand j'aurais trouvé mieux pour le scan
 signals:

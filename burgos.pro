@@ -6,7 +6,7 @@ QT += network \
 TARGET = burgos
 TEMPLATE = app
 SOURCES += main.cpp \
-    model.cpp \
+    ftpmodel.cpp \
     proxymodel.cpp \
     burgos.cpp \
     scanftp.cpp \
@@ -16,7 +16,7 @@ SOURCES += main.cpp \
     messagehandler.cpp \
     ftp.cpp \
     domitem.cpp
-HEADERS += model.h \
+HEADERS += ftpmodel.h \
     proxymodel.h \
     burgos.h \
     scanftp.h \

@@ -1,6 +1,5 @@
 #include "burgos.h"
 #include "ui_burgos.h"
-#include "model.h"
 #include "ftp.h"
 #include "proxymodel.h"
 #include "scanftp.h"
@@ -42,7 +41,7 @@ Burgos::Burgos(QWidget *parent) :
                                         QSystemTrayIcon::Information, 2000);
     }
 
-    model = new Model();
+    model = new FtpModel();
 
     proxy = new ProxyModel();
     proxy->setSourceModel(model);

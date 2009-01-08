@@ -1,5 +1,5 @@
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef FTPMODEL_H
+#define FTPMODEL_H
 
 #include <QObject>
 #include <QAbstractItemModel>
@@ -11,12 +11,12 @@
 
 class DomItem;
 
-class Model : public QAbstractItemModel
+class FtpModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    Model(QObject *parent = 0);
-    ~Model();
+    FtpModel(QObject *parent = 0);
+    ~FtpModel();
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent) const;
