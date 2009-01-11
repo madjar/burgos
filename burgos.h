@@ -23,8 +23,6 @@ public:
     explicit Burgos(QWidget *parent = 0);
     virtual ~Burgos();
 
-    FtpModel *model;
-
     //Ces slots vont peter quand j'aurais trouvé mieux pour le scan
 signals:
     void setProgressBarMaximum(int);
@@ -55,6 +53,7 @@ private:
     QSystemTrayIcon *trayIcon;
 
     Ui::Burgos *m_ui;
+    FtpModel *model;
     ProxyModel *proxy;
     PeerModel *peer;
 };
