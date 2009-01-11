@@ -4,10 +4,9 @@
 #include <QObject>
 #include <QAbstractItemModel>
 #include <QString>
-#include <QDomNode>
-#include <QDomDocument>
 
-#include "ftp.h"
+
+#include "ftphandler.h"
 
 class DomItem;
 
@@ -16,7 +15,6 @@ class FtpModel : public QAbstractItemModel
     Q_OBJECT
 public:
     FtpModel(QObject *parent = 0);
-    ~FtpModel();
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent) const;
@@ -28,7 +26,6 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 public slots:
-    void save();
     void addFtp(QString &host);
 
 private slots:
@@ -38,9 +35,7 @@ private:
     static quint64 recursiveSize(QDomNode node);
     static QString humanReadableSize(qint64 intSize);
 
-    QList<Ftp*> list;
-    QDomDocument domDocument;
-    DomItem *rootItem;
+    FtpHandler ftpHandler;
 };
 
 #endif // BURGOSMODEL_H

@@ -2,33 +2,11 @@
 #include <QPixmap>
 
 #include "ftpmodel.h"
-#include "ftp.h"
 #include "domitem.h"
 
-#include <QtDebug>
-
-FtpModel::FtpModel(QObject *parent) : QAbstractItemModel(parent), domDocument(QDomDocument("ftp_index"))
+FtpModel::FtpModel(QObject *parent) : QAbstractItemModel(parent)
 {
-    QDomElement domRoot = domDocument.createElement("ftp_list");
-    rootItem = new DomItem(domRoot, 0);
-    domDocument.appendChild(domRoot);
-    connect(qApp, SIGNAL(aboutToQuit()),
-            this, SLOT(save()));
-}
-
-FtpModel::~FtpModel()
-{
-    delete rootItem;
-}
-
-void FtpModel::addFtp(QString &host)
-{
-    int pos = list.size();
-    beginInsertRows(QModelIndex(), pos, pos);
-    Ftp *ftp = new Ftp(host, rootItem);
-    list.append(ftp);
-    endInsertRows();
-    connect(ftp,SIGNAL(modified(DomItem*)),
+    connect(&ftpHandler,SIGNAL(itemUpdated(DomItem*)),
             this, SLOT(itemUpdated(DomItem*)));
 }
 
@@ -40,7 +18,7 @@ QModelIndex FtpModel::index(int row, int column, const QModelIndex &parent) cons
     DomItem *parentItem;
 
     if (!parent.isValid())
-        parentItem = rootItem;
+        parentItem = ftpHandler.root();
     else
         parentItem = static_cast<DomItem*>(parent.internalPointer());
 
@@ -59,7 +37,7 @@ QModelIndex FtpModel::parent(const QModelIndex &child) const
     DomItem *childItem = static_cast<DomItem*>(child.internalPointer());
     DomItem *parentItem = childItem->parent();
 
-    if (!parentItem || parentItem == rootItem)
+    if (!parentItem || parentItem == ftpHandler.root())
         return QModelIndex();
 
     return createIndex(parentItem->row(), 0, parentItem);
@@ -73,12 +51,13 @@ int FtpModel::rowCount(const QModelIndex &parent) const
     DomItem *parentItem;
 
     if (!parent.isValid())
-        parentItem = rootItem;
+        parentItem = ftpHandler.root();
     else
         parentItem = static_cast<DomItem*>(parent.internalPointer());
 
     return parentItem->node().childNodes().count();
 }
+
 QVariant FtpModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -138,17 +117,12 @@ QVariant FtpModel::headerData(int section,  Qt::Orientation orientation, int rol
     return QVariant();
 }
 
-void FtpModel::save()
+void FtpModel::addFtp(QString &host)
 {
-    const QString dir = QDir::homePath()+"/.burgos/";
-    QDir d;
-    if (!d.exists(dir))
-        d.mkdir(dir);
-    QFile file(dir + "index.xml");
-    file.open(QIODevice::WriteOnly);
-    QTextStream out(&file);
-    domDocument.save(out, 4);
-    file.close();
+    int pos = ftpHandler.size();
+    beginInsertRows(QModelIndex(), pos, pos);
+    ftpHandler.addFtp(host);
+    endInsertRows();
 }
 
 void FtpModel::itemUpdated(DomItem *item)
