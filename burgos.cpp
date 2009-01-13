@@ -58,6 +58,8 @@ Burgos::Burgos(QWidget *parent) :
     m_ui->treeView->setAnimated(true);
 
 
+    connect(m_ui->lineEdit,SIGNAL(returnPressed()),
+            this,SLOT(returnPressed()));
     connect(m_ui->lineEdit,SIGNAL(textEdited(const QString &)),
             this,SLOT(textEdited(const QString &)));
 
@@ -88,16 +90,25 @@ Burgos::~Burgos()
         delete icon;
 }
 
-void Burgos::textEdited(const QString &string)
+void Burgos::returnPressed()
 {
-    //TODO faire quelque chose de plus mieux
-    m_ui->treeView->collapseAll();
-    proxy->setFilterWildcard(string);
-
-    if (string.size() >= 3)
+    QString text = m_ui->lineEdit->text();
+    if (text.startsWith("addftp:"))
     {
+        model->addFtp(text.split(':').at(1));
+        m_ui->lineEdit->clear();
+    }
+    else
+    {
+        proxy->setFilterWildcard(text);
         m_ui->treeView->expandAll();
     }
+}
+
+void Burgos::textEdited(const QString &string)
+{
+    if (string.isEmpty())
+        proxy->setFilterWildcard(string);
 }
 
 void Burgos::scan()
@@ -108,8 +119,8 @@ void Burgos::scan()
                    this, SIGNAL(setProgressBarMaximum(int)));
     QObject::connect(s, SIGNAL(progressChanged(int)),
                    this, SIGNAL(setProgressBarValue(int)));
-    QObject::connect (s, SIGNAL(found(QString&)),
-                    this->model, SLOT(addFtp(QString&)));
+    QObject::connect (s, SIGNAL(found(const QString&)),
+                    this->model, SLOT(addFtp(const QString&)));
     s->scan();
 }
 

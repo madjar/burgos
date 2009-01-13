@@ -29,7 +29,7 @@ public:
 
 public slots:
     void save();
-    void addFtp(QString &host);
+    void addFtp(const QString &host);
 
 private slots:
     void itemUpdated(DomItem *item);

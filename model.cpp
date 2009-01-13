@@ -21,7 +21,7 @@ Model::~Model()
     delete rootItem;
 }
 
-void Model::addFtp(QString &host)
+void Model::addFtp(const QString &host)
 {
     int pos = list.size();
     beginInsertRows(QModelIndex(), pos, pos);
