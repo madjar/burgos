@@ -27,7 +27,7 @@ int FtpHandler::size() const
     return list.size();
 }
 
-void FtpHandler::addFtp(QString &host)
+void FtpHandler::addFtp(const QString &host)
 {
     Ftp *ftp = new Ftp(host, rootItem);
     list.append(ftp);

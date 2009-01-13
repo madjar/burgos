@@ -29,7 +29,8 @@ signals:
     void setProgressBarValue(int);
 
 public slots:
-    void textEdited(const QString &);
+    void returnPressed();
+    void textEdited(const QString &string);
     void scan();
 
     void closeEvent(QCloseEvent *);

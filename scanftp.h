@@ -16,7 +16,7 @@ public:
     void scan();
 
 signals:
-    void found(QString &host);
+    void found(const QString &host);
     void maximumChanged(int value);
     void progressChanged(int value);
 

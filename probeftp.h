@@ -15,7 +15,7 @@ public:
     ~ProbeFtp();
 
 signals:
-    void connected(QString &host);
+    void connected(const QString &host);
     void done();
 
 private slots:

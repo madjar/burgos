@@ -26,7 +26,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 public slots:
-    void addFtp(QString &host);
+    void addFtp(const QString &host);
 
 private slots:
     void itemUpdated(DomItem *item);

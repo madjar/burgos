@@ -117,7 +117,7 @@ QVariant FtpModel::headerData(int section,  Qt::Orientation orientation, int rol
     return QVariant();
 }
 
-void FtpModel::addFtp(QString &host)
+void FtpModel::addFtp(const QString &host)
 {
     int pos = ftpHandler.size();
     beginInsertRows(QModelIndex(), pos, pos);

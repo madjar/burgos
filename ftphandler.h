@@ -21,7 +21,7 @@ public:
 
 public slots:
     void save();
-    void addFtp(QString &host);
+    void addFtp(const QString &host);
 
 signals:
     void itemUpdated(DomItem *);
