@@ -30,5 +30,4 @@ HEADERS += ftpmodel.h \
     ftphandler.h
 FORMS += burgos.ui
 RESOURCES += burgos.qrc
-TRANSLATIONS = burgos_fr.ts \
-    burgos_en.ts
+TRANSLATIONS = burgos_fr.ts
