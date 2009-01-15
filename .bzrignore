@@ -1,6 +1,4 @@
-./Makefile
-./Makefile.Debug
-./Makefile.Release
+./Makefile*
 ./burgos
 ./burgos.pro.user
 ./debug/

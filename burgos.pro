@@ -1,33 +1,14 @@
-# -------------------------------------------------
-# Project created by QtCreator 2008-11-22T15:54:05
-# -------------------------------------------------
-QT += network \
-    xml
 TARGET = burgos
 TEMPLATE = app
+include(common.pri)
 SOURCES += main.cpp \
     ftpmodel.cpp \
     proxymodel.cpp \
     burgos.cpp \
-    scanftp.cpp \
-    probeftp.cpp \
-    peer.cpp \
-    peermodel.cpp \
-    messagehandler.cpp \
-    ftp.cpp \
-    domitem.cpp \
-    ftphandler.cpp
+    peermodel.cpp
 HEADERS += ftpmodel.h \
     proxymodel.h \
     burgos.h \
-    scanftp.h \
-    probeftp.h \
-    peer.h \
-    peermodel.h \
-    messagehandler.h \
-    ftp.h \
-    domitem.h \
-    ftphandler.h
+    peermodel.h
 FORMS += burgos.ui
 RESOURCES += burgos.qrc
-TRANSLATIONS = burgos_fr.ts
