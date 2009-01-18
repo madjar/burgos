@@ -1,6 +1,7 @@
 ./Makefile*
 ./burgos
-./burgos.pro.user
+./burgos-cli
+./*.pro.user
 ./debug/
 ./release/
 ui_*.h
