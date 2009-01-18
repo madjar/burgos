@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr">
+<defaultcodec></defaultcodec>
 <context>
     <name>Burgos</name>
     <message>
@@ -61,6 +62,14 @@
         <location filename="burgos.ui" line="70"/>
         <source>&amp;Log</source>
         <translation>&amp;Historique</translation>
+    </message>
+</context>
+<context>
+    <name>Cli</name>
+    <message>
+        <location filename="cli.cpp" line="41"/>
+        <source>Unknown command : %1</source>
+        <translation>Commande inconnue : %1</translation>
     </message>
 </context>
 <context>

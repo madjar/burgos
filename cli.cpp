@@ -2,8 +2,6 @@
 #include <QStringList>
 #include "cli.h"
 
-#include <QtDebug>
-
 Cli::Cli(FtpHandler *ftphandler, QObject *parent) :
         QThread(parent),
         in(stdin, QIODevice::ReadOnly),
@@ -37,8 +35,8 @@ void Cli::command(QString cmd)
 {
     if (cmd.startsWith("addftp"))
         emit addFtp(cmd.split(' ').at(1));
-    else if (cmd.contains("print"))
+    else if (cmd=="print")
         emit print(&out);
     else
-        out << "Command not found" <<endl;
+        out << tr("Unknown command : %1").arg(cmd) <<endl;
 }
