@@ -4,18 +4,27 @@
 
 #include <QtDebug>
 
-Cli::Cli(FtpHandler *handler, QObject *parent) :
-        QObject(parent),
+Cli::Cli(FtpHandler *ftphandler, QObject *parent) :
+        QThread(parent),
         in(stdin, QIODevice::ReadOnly),
         out(stdout, QIODevice::WriteOnly),
-        handler(handler)
+        handler(ftphandler)
 {
     if (!handler)
-        this->handler = new FtpHandler(this);
+        handler = new FtpHandler(this);
+    connect(this, SIGNAL(addFtp(const QString&)),
+            handler, SLOT(addFtp(const QString&)));
+    connect(this, SIGNAL(print(QTextStream*)),
+            handler, SLOT(print(QTextStream*)));
+}
 
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(read()));
-    timer->start();
+void Cli::run()
+{
+    forever
+    {
+        QString line = in.readLine();
+        command(line);
+    }
 }
 
 void Cli::read()
@@ -27,7 +36,9 @@ void Cli::read()
 void Cli::command(QString cmd)
 {
     if (cmd.startsWith("addftp"))
-        handler->addFtp(cmd.split(' ').at(1));
+        emit addFtp(cmd.split(' ').at(1));
     else if (cmd.contains("print"))
-        handler->print(out);
+        emit print(&out);
+    else
+        out << "Command not found" <<endl;
 }

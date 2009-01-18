@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     qDebug("locale is %s", qPrintable(QLocale::system().name()));
 
     Cli cli;
+    cli.start();
 
     qDebug("Starting app");
     return app.exec();

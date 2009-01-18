@@ -19,11 +19,11 @@ public:
 
     DomItem *root() const;
     int size() const;
-    void print(QTextStream &stream);
 
 public slots:
     void save();
     void addFtp(const QString &host);
+    void print(QTextStream *stream);
 
 signals:
     void itemUpdated(DomItem *);

@@ -48,7 +48,7 @@ void FtpHandler::save()
     file.close();
 }
 
-void FtpHandler::print(QTextStream &stream)
+void FtpHandler::print(QTextStream *stream)
 {
-    domDocument.save(stream, 4);
+    domDocument.save(*stream, 4);
 }

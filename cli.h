@@ -2,20 +2,26 @@
 #define CLI_H
 
 #include <QObject>
+#include <QThread>
 #include <QTextStream>
 #include <QString>
 
 #include "ftphandler.h"
 
-class Cli : public QObject
+class Cli : public QThread
 {
     Q_OBJECT
 
 public:
-    Cli(FtpHandler *handler = 0, QObject *parent = 0);
+    Cli(FtpHandler *ftphandler = 0, QObject *parent = 0);
+    void run();
 
 public slots:
     void read();
+
+signals:
+    void addFtp (const QString&);
+    void print (QTextStream*);
 
 private:
     void command(QString cmd);
