@@ -1,6 +1,7 @@
 #include <QTimer>
 #include <QStringList>
 #include "cli.h"
+#include "scanftp.h"
 
 Cli::Cli(FtpHandler *ftphandler, QObject *parent) :
         QThread(parent),
@@ -14,6 +15,8 @@ Cli::Cli(FtpHandler *ftphandler, QObject *parent) :
             handler, SLOT(addFtp(const QString&)));
     connect(this, SIGNAL(print(QTextStream*)),
             handler, SLOT(print(QTextStream*)));
+    connect(this, SIGNAL(scan()),
+            this, SLOT(executeScan()));
 }
 
 void Cli::run()
@@ -25,10 +28,12 @@ void Cli::run()
     }
 }
 
-void Cli::read()
+void Cli::executeScan()
 {
-    QString line = in.readLine();
-    command(line);
+    ScanFtp *s = new ScanFtp();
+    QObject::connect (s, SIGNAL(found(const QString&)),
+                    handler, SLOT(addFtp(const QString&)));
+    s->scan();
 }
 
 void Cli::command(QString cmd)
@@ -37,6 +42,8 @@ void Cli::command(QString cmd)
         emit addFtp(cmd.split(' ').at(1));
     else if (cmd=="print")
         emit print(&out);
+    else if (cmd=="scan")
+        emit scan();
     else
         out << tr("Unknown command : %1").arg(cmd) <<endl;
 }

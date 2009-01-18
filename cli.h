@@ -17,11 +17,12 @@ public:
     void run();
 
 public slots:
-    void read();
+    void executeScan();
 
 signals:
     void addFtp (const QString&);
     void print (QTextStream*);
+    void scan();
 
 private:
     void command(QString cmd);
