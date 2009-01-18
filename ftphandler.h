@@ -5,6 +5,7 @@
 #include <QDomNode>
 #include <QDomDocument>
 #include <QString>
+#include <QTextStream>
 
 class DomItem;
 class Ftp;
@@ -18,6 +19,7 @@ public:
 
     DomItem *root() const;
     int size() const;
+    void print(QTextStream &stream);
 
 public slots:
     void save();

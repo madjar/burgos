@@ -5,12 +5,14 @@
 #include <QTextStream>
 #include <QString>
 
+#include "ftphandler.h"
+
 class Cli : public QObject
 {
     Q_OBJECT
 
 public:
-    Cli(QObject *parent = 0);
+    Cli(FtpHandler *handler = 0, QObject *parent = 0);
 
 public slots:
     void read();
@@ -20,6 +22,7 @@ private:
 
     QTextStream in;
     QTextStream out;
+    FtpHandler *handler;
 };
 
 #endif // CLI_H
