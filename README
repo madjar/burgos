@@ -1,20 +1,9 @@
-Burgos is split into two sub-projects : burgos and burgos-cli. In order to build one or the other, type :
-
-qmake burgos.pro
-OR
-qmake burgos-cli.pro
-
-if you want to build both :
-
-qmake all.pro
-
-then just type 
-
+To compile Burgos, execute :
+qmake
 make
 
-If you want to change the build target, juste type
-make distclean
-then type one of the previous qmake commands.
+If you just want to build burgos-cli, replace the latter by :
+make sub-src-burgos-cli-pro
 
 ----------------
 Language files :
@@ -25,3 +14,5 @@ then you can type
 lupdate ts.pro
 and
 lrelease ts.pro
+
+Don't forget to remove ts.pro in order to clean.

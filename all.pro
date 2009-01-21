@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS += burgos.pro burgos-cli.pro
+SUBDIRS += src/burgos.pro src/burgos-cli.pro

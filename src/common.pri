@@ -1,5 +1,6 @@
 QT += network \
     xml
+DESTDIR = ..
 TRANSLATIONS = burgos_fr.ts
 SOURCES += scanftp.cpp \
     probeftp.cpp \
