@@ -97,7 +97,7 @@ void Burgos::returnPressed()
         model->addFtp(text.split(':').at(1));
         m_ui->lineEdit->clear();
     }
-    else
+    else if (!text.isEmpty())
     {
         proxy->setFilterWildcard(text);
         m_ui->treeView->expandAll();
