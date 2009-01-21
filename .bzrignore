@@ -1,9 +1,10 @@
 ./Makefile*
+./src/Makefile*
 ./burgos
 ./burgos-cli
 ./*.pro.user
-./debug/
-./release/
+./src/debug/
+./src/release/
 ui_*.h
 *.qm
 ./qtc-gdbmacros/

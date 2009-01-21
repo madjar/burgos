@@ -1,6 +1,7 @@
 QT += network \
     xml
 DESTDIR = ..
+CONFIG+=debug_and_release debug silent
 TRANSLATIONS = burgos_fr.ts
 SOURCES += scanftp.cpp \
     probeftp.cpp \
