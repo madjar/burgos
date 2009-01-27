@@ -1,3 +1,7 @@
+Hello, and welcome to Burgos, the to-be cutting-edge distributed ftp indexer and search engine !
+
+First of all, you will need Qt in order to compile it. You can find Qt at this address : http://www.qtsoftware.com.
+
 To compile Burgos, execute :
 qmake
 make
