@@ -30,12 +30,14 @@ bool ProxyModel::lessThan(const QModelIndex &left,
 
 bool ProxyModel::filterAcceptsRow (int sourceRow,const QModelIndex & sourceParent) const
 {
+    if (filterRegExp().isEmpty())
+        return true; // Inutile de faire une recherche récursive si on ne recherche pas.
     QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
     bool result = sourceModel()-> data(index).toString().contains(filterRegExp());
     for (int i=0; index.child(i, 0).isValid(); i++)
     {
-        QModelIndex child = index.child(i, 0);
         result = result || filterAcceptsRow(i, index);
     }
+    // Idée : on perd pas mal de temps à revérifier chaque noeud plusieurs fois : y'a de l'optimisation à faire.
     return result;
 }
