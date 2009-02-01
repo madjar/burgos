@@ -1,38 +1,16 @@
 #include <QtCore>
 #include <QPixmap>
 
-#include "model.h"
-#include "ftp.h"
+#include "ftpmodel.h"
 #include "domitem.h"
 
-#include <QtDebug>
-
-Model::Model(QObject *parent) : QAbstractItemModel(parent), domDocument(QDomDocument("ftp_index"))
+FtpModel::FtpModel(QObject *parent) : QAbstractItemModel(parent)
 {
-    QDomElement domRoot = domDocument.createElement("ftp_list");
-    rootItem = new DomItem(domRoot, 0);
-    domDocument.appendChild(domRoot);
-    connect(qApp, SIGNAL(aboutToQuit()),
-            this, SLOT(save()));
-}
-
-Model::~Model()
-{
-    delete rootItem;
-}
-
-void Model::addFtp(const QString &host)
-{
-    int pos = list.size();
-    beginInsertRows(QModelIndex(), pos, pos);
-    Ftp *ftp = new Ftp(host, rootItem);
-    list.append(ftp);
-    endInsertRows();
-    connect(ftp,SIGNAL(modified(DomItem*)),
+    connect(&ftpHandler,SIGNAL(itemUpdated(DomItem*)),
             this, SLOT(itemUpdated(DomItem*)));
 }
 
-QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
+QModelIndex FtpModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -40,7 +18,7 @@ QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
     DomItem *parentItem;
 
     if (!parent.isValid())
-        parentItem = rootItem;
+        parentItem = ftpHandler.root();
     else
         parentItem = static_cast<DomItem*>(parent.internalPointer());
 
@@ -51,7 +29,7 @@ QModelIndex Model::index(int row, int column, const QModelIndex &parent) const
         return QModelIndex();
 }
 
-QModelIndex Model::parent(const QModelIndex &child) const
+QModelIndex FtpModel::parent(const QModelIndex &child) const
 {
     if (!child.isValid())
         return QModelIndex();
@@ -59,13 +37,13 @@ QModelIndex Model::parent(const QModelIndex &child) const
     DomItem *childItem = static_cast<DomItem*>(child.internalPointer());
     DomItem *parentItem = childItem->parent();
 
-    if (!parentItem || parentItem == rootItem)
+    if (!parentItem || parentItem == ftpHandler.root())
         return QModelIndex();
 
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
-int Model::rowCount(const QModelIndex &parent) const
+int FtpModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.column() > 0)
         return 0;
@@ -73,13 +51,14 @@ int Model::rowCount(const QModelIndex &parent) const
     DomItem *parentItem;
 
     if (!parent.isValid())
-        parentItem = rootItem;
+        parentItem = ftpHandler.root();
     else
         parentItem = static_cast<DomItem*>(parent.internalPointer());
 
     return parentItem->node().childNodes().count();
 }
-QVariant Model::data(const QModelIndex &index, int role) const
+
+QVariant FtpModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -91,8 +70,6 @@ QVariant Model::data(const QModelIndex &index, int role) const
         return QVariant();
 
     DomItem *item = static_cast<DomItem*>(index.internalPointer());
-
-    QDomNode node = item->node();
     switch (role)
     {
     case Qt::DisplayRole:
@@ -100,30 +77,31 @@ QVariant Model::data(const QModelIndex &index, int role) const
         switch (index.column())
         {
         case 0:
-            return node.attributes().namedItem("name").nodeValue();
+            return item->node().attributes().namedItem("name").nodeValue();
         case 1:
-            return humanReadableSize(recursiveSize(node));
+            return humanReadableSize(recursiveSize(item->node()));
         default:
             return QVariant();
         }
     case Qt::DecorationRole:
         if (index.column() == 0)
         {
-            if (node.nodeName()=="ftp")
+            QString name = item->node().nodeName();
+            if (name=="ftp")
                 return QPixmap(":/icons/computer.png");
-            if (node.nodeName()=="dir")
+            if (name=="dir")
                 return QPixmap(":/icons/directory.png");
         }
     }
     return QVariant();
 }
 
-int Model::columnCount(const QModelIndex & /* parent */) const
+int FtpModel::columnCount(const QModelIndex & /* parent */) const
 {
     return 2;
 }
 
-QVariant Model::headerData(int section,  Qt::Orientation orientation, int role) const
+QVariant FtpModel::headerData(int section,  Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section)
@@ -139,25 +117,20 @@ QVariant Model::headerData(int section,  Qt::Orientation orientation, int role) 
     return QVariant();
 }
 
-void Model::save()
+void FtpModel::addFtp(const QString &host)
 {
-    const QString dir = QDir::homePath()+"/.burgos/";
-    QDir d;
-    if (!d.exists(dir))
-        d.mkdir(dir);
-    QFile file(dir + "index.xml");
-    file.open(QIODevice::WriteOnly);
-    QTextStream out(&file);
-    domDocument.save(out, 4);
-    file.close();
+    int pos = ftpHandler.size();
+    beginInsertRows(QModelIndex(), pos, pos);
+    ftpHandler.addFtp(host);
+    endInsertRows();
 }
 
-void Model::itemUpdated(DomItem *item)
+void FtpModel::itemUpdated(DomItem *item)
 {
     emit dataChanged(createIndex(item->row(),0,item->parent()), createIndex(item->row(),1,item->parent()));
 }
 
-quint64 Model::recursiveSize(QDomNode node)
+quint64 FtpModel::recursiveSize(QDomNode node)
 {
     qint64 total=node.attributes().namedItem("size").nodeValue().toULongLong();
 
@@ -171,7 +144,7 @@ quint64 Model::recursiveSize(QDomNode node)
 }
 
 
-QString Model::humanReadableSize(qint64 intSize)
+QString FtpModel::humanReadableSize(qint64 intSize)
 {
     static const QStringList prefix= QStringList() << "" << "K" << "M" << "G" << "T" << "P" << "E" << "Z" << "Y";
     double size=intSize;

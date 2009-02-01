@@ -1,22 +1,20 @@
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef FTPMODEL_H
+#define FTPMODEL_H
 
 #include <QObject>
 #include <QAbstractItemModel>
 #include <QString>
-#include <QDomNode>
-#include <QDomDocument>
 
-#include "ftp.h"
+
+#include "ftphandler.h"
 
 class DomItem;
 
-class Model : public QAbstractItemModel
+class FtpModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    Model(QObject *parent = 0);
-    ~Model();
+    FtpModel(QObject *parent = 0);
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent) const;
@@ -24,11 +22,10 @@ public:
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 public slots:
-    void save();
     void addFtp(const QString &host);
 
 private slots:
@@ -38,9 +35,7 @@ private:
     static quint64 recursiveSize(QDomNode node);
     static QString humanReadableSize(qint64 intSize);
 
-    QList<Ftp*> list;
-    QDomDocument domDocument;
-    DomItem *rootItem;
+    FtpHandler ftpHandler;
 };
 
 #endif // BURGOSMODEL_H

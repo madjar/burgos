@@ -2,7 +2,6 @@
 #include "domitem.h"
 
 #include <QtCore>
-#include <QPixmap>
 #include <QtNetwork>
 
 
@@ -98,7 +97,7 @@ void Ftp::ftpDone(bool error)
 
 QString Ftp::sanitize(QString string)
 {
-    // )Nettoie les chaînes obtenues par listInfo
+    // Nettoie les chaînes obtenues par listInfo
     // Problème vient du fait que QFtp récupère les noms de fichier en utf8 et les interprète comme de l'utf16.
     if (string.toLatin1()!=string.toUtf8()) //Basiquement, ça veut dire "si on a un accent"
     {

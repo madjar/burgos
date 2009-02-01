@@ -1,16 +1,12 @@
 #include <QtCore>
-#include <QtGui>
 #include <QLocale>
-#include "burgos.h"
+#include "cli.h"
 #include "messagehandler.h"
-
-#include "scanftp.h"
-
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-
+    QCoreApplication app(argc, argv);
+    
     MessageHandler::pick();
     qDebug("MessageHandler started");
 
@@ -20,9 +16,8 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
     qDebug("locale is %s", qPrintable(QLocale::system().name()));
 
-    Burgos burgos;
-    qDebug("Burgos started");
-    burgos.show();
+    Cli cli;
+    cli.start();
 
     qDebug("Starting app");
     return app.exec();
