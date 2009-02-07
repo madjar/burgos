@@ -1,7 +1,8 @@
 QT += network \
     xml
 DESTDIR = ..
-CONFIG+=debug_and_release debug
+CONFIG += debug_and_release \
+    debug
 TRANSLATIONS = burgos_fr.ts
 SOURCES += scanftp.cpp \
     probeftp.cpp \
@@ -16,4 +17,9 @@ HEADERS += scanftp.h \
     messagehandler.h \
     ftp.h \
     domitem.h \
-    ftphandler.h
+    ftphandler.h \
+    ping.h
+
+unix {
+    SOURCES += ping_unix.cpp
+}
