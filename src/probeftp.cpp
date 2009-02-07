@@ -9,7 +9,7 @@
 
 ProbeFtp::ProbeFtp(QString host, QObject *parent) : QObject(parent), host(host)
 {
-    Ping::ping(host, this, SLOT(pingFinished(int)));
+    Ping::ping(host, this, SLOT(pingFinished(bool)));
 }
 
 ProbeFtp::~ProbeFtp()
@@ -18,9 +18,9 @@ ProbeFtp::~ProbeFtp()
     emit done();
 }
 
-void ProbeFtp::pingFinished(int exitCode)
+void ProbeFtp::pingFinished(bool answers)
 {
-    if (exitCode == 0)
+    if (answers)
     {
         qDebug() << host << "answers to ping";
         ftp = new QFtp(this);

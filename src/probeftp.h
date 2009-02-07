@@ -19,7 +19,7 @@ signals:
     void done();
 
 private slots:
-    void pingFinished(int exitCode);
+    void pingFinished(bool answers);
     void ftpStateChanged(int state);
 
 private:

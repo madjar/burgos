@@ -1,23 +1,52 @@
 #include "ping.h"
 
-#include <QProcess>
+#include <QTimer>
+#include <QtDebug>
 
 Ping::Ping(QString host) : QObject(0), host(host)
 {
-    QProcess *process = new QProcess(this);
-    connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
-            this, SIGNAL(finished(int)));
+    process = new QProcess(this);
     connect(process, SIGNAL(finished(int,QProcess::ExitStatus)),
-            this, SLOT(deleteLater()));
-    process->start(QString("ping -c 3 %1").arg(host), QIODevice::NotOpen);
+            this, SLOT(cmdFinished(int)));
+    process->start(QString("ping -c 3 %1").arg(host), QIODevice::ReadOnly);
 }
-
-//TODO : gestion des crashs de ping pour problèmes de buffer
-// note : exit code de ping : 0=up, 1=down, 2=error
 
 Ping *Ping::ping(QString host, QObject *receiver, const char *member)
 {
     Ping *ping = new Ping(host);
-    connect(ping, SIGNAL(finished(int)), receiver, member);
+    connect(ping, SIGNAL(finished(bool)), receiver, member);
     return ping;
+}
+
+void Ping::cmdFinished(int exitCode)
+{
+    if (exitCode==2)
+    {
+        QByteArray error = process->readAllStandardError();
+        if(error.contains("connect: No buffer space available"))
+        {
+            qDebug()<<host<<"No buffer space available : retrying";
+            QTimer::singleShot(200, this, SLOT(childPing()));
+        }
+        else
+        {
+            qDebug()<<host<<"Unknown error :"<< error;
+            signalAndSuicide(false);
+        }
+    }
+    else
+    {
+        signalAndSuicide(!exitCode); // if exitCode==0, host is up and answers is true
+    }
+}
+
+void Ping::childPing()
+{
+    Ping::ping(host, this, SLOT(signalAndSuicide(bool)));
+}
+
+void Ping::signalAndSuicide(bool answers)
+{
+    emit finished(answers);
+    deleteLater();
 }

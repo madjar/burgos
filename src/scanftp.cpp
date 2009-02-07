@@ -30,7 +30,7 @@ void ScanFtp::scan()
                 quint32 netmask = entry.netmask().toIPv4Address();
                 quint32 base = ip & netmask;
                 for (quint32 current = 0x00000000; current <= (~netmask); current++)
-                    if (current % 256 != 0)
+                    if (current % 256 != 0 && current % 256 != 255)
                         list.append(QHostAddress(base + current).toString());
             }
     emit maximumChanged(list.size());
