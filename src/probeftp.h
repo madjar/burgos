@@ -11,7 +11,7 @@ class ProbeFtp : public QObject
 {
     Q_OBJECT
 public:
-    ProbeFtp(QString host, QObject *parent = 0);
+    ProbeFtp(const QString &host, QObject *parent = 0);
     ~ProbeFtp();
 
 signals:

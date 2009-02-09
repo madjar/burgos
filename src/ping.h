@@ -9,8 +9,8 @@ class Ping : public QObject
 {
     Q_OBJECT
 public:
-    Ping(QString host);
-    static Ping *ping(QString host, QObject *receiver, const char *member);
+    Ping(const QString &host);
+    static Ping *ping(const QString &host, QObject *receiver, const char *member);
 
 signals:
     void finished(bool answers);

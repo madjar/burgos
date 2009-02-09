@@ -16,7 +16,7 @@ public:
     int row();
 
     QDomElement element() const;
-    DomItem *newChild(QString tagName);
+    DomItem *newChild(const QString &tagName);
 
 private:
     QDomNode domNode;

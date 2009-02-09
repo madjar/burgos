@@ -7,7 +7,7 @@
 
 #include <QtDebug>
 
-ProbeFtp::ProbeFtp(QString host, QObject *parent) : QObject(parent), host(host)
+ProbeFtp::ProbeFtp(const QString &host, QObject *parent) : QObject(parent), host(host)
 {
     Ping::ping(host, this, SLOT(pingFinished(bool)));
 }

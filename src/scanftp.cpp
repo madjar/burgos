@@ -49,7 +49,7 @@ void ScanFtp::next()
         deleteLater();
 }
 
-void ScanFtp::knock(QString host)
+void ScanFtp::knock(const QString &host)
 {
     ProbeFtp *probe = new ProbeFtp(host, this);
     connect(probe, SIGNAL(connected(const QString&)),

@@ -4,7 +4,7 @@
 #include <QtDebug>
 #include <QProcess>
 
-Ping::Ping(QString host) : QObject(0), host(host)
+Ping::Ping(const QString &hostt) : QObject(0), host(host)
 {
     process = new QProcess(this);
     connect(process, SIGNAL(finished(int,QProcess::ExitStatus)),
@@ -12,7 +12,7 @@ Ping::Ping(QString host) : QObject(0), host(host)
     process->start(QString("ping -c 3 %1").arg(host), QIODevice::ReadOnly);
 }
 
-Ping *Ping::ping(QString host, QObject *receiver, const char *member)
+Ping *Ping::ping(const QString &host, QObject *receiver, const char *member)
 {
     Ping *ping = new Ping(host);
     connect(ping, SIGNAL(finished(bool)), receiver, member);

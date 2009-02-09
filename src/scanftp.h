@@ -25,7 +25,7 @@ private slots:
     void probeDone();
 
 private:
-    void knock(QString host);
+    void knock(const QString &host);
 
     QStringList list;
     int opened;
