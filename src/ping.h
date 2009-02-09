@@ -15,13 +15,16 @@ public:
 signals:
     void finished(bool answers);
 
+private slots:
+    void signalAndSuicide(bool answers);
+
 private:
     QString host;
+
 #ifdef Q_OS_UNIX
 private slots:
     void cmdFinished(int exitCode);
     void childPing();
-    void signalAndSuicide(bool answers);
 
 private:
     QProcess *process;

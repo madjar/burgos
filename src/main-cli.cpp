@@ -2,11 +2,15 @@
 #include <QLocale>
 #include "cli.h"
 #include "messagehandler.h"
+#include "utils.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
     
+    if (QCoreApplication::arguments().contains("--increase-buffer"))
+        return Utils::increaseBuffer();
+
     MessageHandler::pick();
     qDebug("MessageHandler started");
 

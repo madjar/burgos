@@ -10,7 +10,8 @@ SOURCES += scanftp.cpp \
     messagehandler.cpp \
     ftp.cpp \
     domitem.cpp \
-    ftphandler.cpp
+    ftphandler.cpp \
+    utils.cpp
 HEADERS += scanftp.h \
     probeftp.h \
     peer.h \
@@ -18,8 +19,6 @@ HEADERS += scanftp.h \
     ftp.h \
     domitem.h \
     ftphandler.h \
-    ping.h
-
-unix {
-    SOURCES += ping_unix.cpp
-}
+    ping.h \
+    utils.h
+unix:SOURCES += ping_unix.cpp

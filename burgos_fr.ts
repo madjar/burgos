@@ -127,4 +127,62 @@
         <translation>Pas de pairs disponibles</translation>
     </message>
 </context>
+<context>
+    <name>Utils</name>
+    <message>
+        <location filename="src/utils_cli.cpp" line="12"/>
+        <source>Burgos isn&apos;t able to scan any more servers. In order to solve this problem, Burgos needs you to modify one of your kernel&apos;s settings.</source>
+        <translation>Burgos ne peux pas scanner plus de serveurs. Pour résoudre ce problème, Burgos doit modifier un paramètre de votre noyau.</translation>
+    </message>
+    <message>
+        <location filename="src/utils_gui.cpp" line="16"/>
+        <source>Connection limit reached</source>
+        <translation>Limite de connections atteinte</translation>
+    </message>
+    <message>
+        <location filename="src/utils_gui.cpp" line="18"/>
+        <source>Burgos isn&apos;t able to scan any more servers. In order to solve this problem, Burgos needs to modify one of your kernel&apos;s settings.</source>
+        <translation>Burgos ne peux pas scanner plus de serveurs. Pour résoudre ce problème, Burgos a besoin que vous modifiiez un paramètre de votre noyau.</translation>
+    </message>
+    <message>
+        <location filename="src/utils_gui.cpp" line="20"/>
+        <source>For the nerdy ones, the problem is that ping says there no buffer space available. We&apos;re going to increase the size of the arp table by running that command :
+%1</source>
+        <translation>Pour les geeks, le problème tient au fait que ping répond &quot;no buffer space available&quot;. Nous allons tenter d&apos;agrandir la table d&apos;arp en exécutant cette commande :
+%1</translation>
+    </message>
+    <message>
+        <location filename="src/utils_gui.cpp" line="39"/>
+        <source>Unable to execute the command</source>
+        <translation>Impossible  d&apos;exécuter la commande</translation>
+    </message>
+    <message>
+        <location filename="src/utils_gui.cpp" line="39"/>
+        <source>Please run this command yourself :
+%1</source>
+        <translation>Veuillez exécuter cette commande vous-même :
+%1</translation>
+    </message>
+    <message>
+        <location filename="src/utils.cpp" line="15"/>
+        <source>Buffer size increased.
+</source>
+        <translation>Buffer agrandi.
+</translation>
+    </message>
+    <message>
+        <location filename="src/utils.cpp" line="17"/>
+        <source>Operation failed, please check you&apos;ve got admin rights.
+</source>
+        <translation>Opération échouée, la commande est-elle exécutée avec les droits d&apos;administration ?
+</translation>
+    </message>
+    <message>
+        <location filename="src/utils_cli.cpp" line="14"/>
+        <source>Please run this command as root :
+%1</source>
+        <translation>Veuillez exécuter cette commande en tant que root :
+%1</translation>
+    </message>
+</context>
 </TS>

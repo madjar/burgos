@@ -5,7 +5,8 @@ SOURCES += main.cpp \
     ftpmodel.cpp \
     proxymodel.cpp \
     burgos.cpp \
-    peermodel.cpp
+    peermodel.cpp \
+    utils_gui.cpp
 HEADERS += ftpmodel.h \
     proxymodel.h \
     burgos.h \
