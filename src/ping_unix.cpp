@@ -1,7 +1,6 @@
 #include "ping.h"
 #include "buffererrorhandler.h"
 
-#include <QtDebug>
 #include <QProcess>
 
 Ping::Ping(const QString &host) : QObject(0), host(host)
@@ -26,7 +25,6 @@ void Ping::cmdFinished(int exitCode)
         QByteArray error = process->readAllStandardError();
         if(error.contains("connect: No buffer space available"))
         {
-            qDebug()<<host<<"No buffer space available";
             BufferErrorHandler::handle(this, SLOT(retry(bool)));
         }
         else
