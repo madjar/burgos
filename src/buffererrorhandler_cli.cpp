@@ -1,10 +1,10 @@
-#include "utils.h"
+#include "buffererrorhandler.h"
 
 #include <QCoreApplication>
 #include <QStringList>
 #include <QTextStream>
 
-bool Utils::bufferProblem()
+bool BufferErrorHandler::bufferProblem()
 {
     QTextStream (stdout, QIODevice::WriteOnly)
             <<QCoreApplication::translate("Utils","Burgos isn't able to scan any more servers. "

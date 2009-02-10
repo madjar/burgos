@@ -24,7 +24,7 @@ private:
 #ifdef Q_OS_UNIX
 private slots:
     void cmdFinished(int exitCode);
-    void childPing();
+    void retry(bool retry);
 
 private:
     QProcess *process;

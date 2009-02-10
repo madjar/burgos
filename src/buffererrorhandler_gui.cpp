@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "buffererrorhandler.h"
 
 #include <QCoreApplication>
 #include <QMessageBox>
@@ -8,7 +8,7 @@
 
 #include <QtDebug>
 
-bool Utils::bufferProblem()
+bool BufferErrorHandler::bufferProblem()
 {
     QString cmd = QCoreApplication::arguments().at(0) + " --increase-buffer";
 

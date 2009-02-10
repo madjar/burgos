@@ -1,10 +1,10 @@
 #include "ping.h"
-#include "utils.h"
+#include "buffererrorhandler.h"
 
 #include <QtDebug>
 #include <QProcess>
 
-Ping::Ping(const QString &hostt) : QObject(0), host(host)
+Ping::Ping(const QString &host) : QObject(0), host(host)
 {
     process = new QProcess(this);
     connect(process, SIGNAL(finished(int,QProcess::ExitStatus)),
@@ -27,10 +27,7 @@ void Ping::cmdFinished(int exitCode)
         if(error.contains("connect: No buffer space available"))
         {
             qDebug()<<host<<"No buffer space available";
-            if (Utils::bufferProblem())
-                childPing();
-            else
-                signalAndSuicide(false);
+            BufferErrorHandler::handle(this, SLOT(retry(bool)));
         }
         else
         {
@@ -44,9 +41,13 @@ void Ping::cmdFinished(int exitCode)
     }
 }
 
-void Ping::childPing()
+void Ping::retry(bool retry)
 {
-    Ping::ping(host, this, SLOT(signalAndSuicide(bool)));
+    disconnect(sender(), 0, this, 0);
+    if (retry)
+        Ping::ping(host, this, SLOT(signalAndSuicide(bool)));
+    else
+        signalAndSuicide(false);
 }
 
 void Ping::signalAndSuicide(bool answers)
