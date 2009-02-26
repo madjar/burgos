@@ -27,6 +27,8 @@ public slots:
 
 signals:
     void itemUpdated(DomItem *);
+    void beginAddFtp(int);
+    void endAddFtp();
 
 private:
     QList<Ftp*> list;

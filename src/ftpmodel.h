@@ -30,6 +30,8 @@ public slots:
 
 private slots:
     void itemUpdated(DomItem *item);
+    void beginAddFtp(int pos);
+    void endAddFtp();
 
 private:
     static quint64 recursiveSize(QDomNode node);

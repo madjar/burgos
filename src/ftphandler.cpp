@@ -29,10 +29,12 @@ int FtpHandler::size() const
 
 void FtpHandler::addFtp(const QString &host)
 {
+    emit beginAddFtp(size());
     Ftp *ftp = new Ftp(host, rootItem);
     list.append(ftp);
     connect(ftp,SIGNAL(modified(DomItem*)),
             this, SIGNAL(itemUpdated(DomItem*)));
+    emit endAddFtp();
 }
 
 void FtpHandler::save()
