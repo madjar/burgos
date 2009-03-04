@@ -107,7 +107,11 @@ void Burgos::returnPressed()
 void Burgos::textEdited(const QString &string)
 {
     if (string.isEmpty())
+    {
+        // Hack tout moche pour résoudre le bug #321871
         proxy->setFilterWildcard(string);
+        proxy->setFilterWildcard(string);
+    }
 }
 
 void Burgos::scan()
