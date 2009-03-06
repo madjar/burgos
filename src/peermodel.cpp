@@ -79,11 +79,13 @@ QVariant PeerModel::headerData(int section,  Qt::Orientation orientation, int ro
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0)
         {
-            return tr("Peer", "peer hostname or ip address");
+            //: peer hostname or ip address
+            return tr("Peer");
         }
         else if (section == 1)
         {
-            return tr("Information", "peer informations");
+            //: peer information
+            return tr("Information");
         }
     }
     return QVariant();
@@ -92,15 +94,10 @@ QVariant PeerModel::headerData(int section,  Qt::Orientation orientation, int ro
 void PeerModel::update()
 {
     QList<QVariant> rootData;
-    if (this->rootItem->rowCount() > 1)
-    {
-       rootData << QString("") << tr("%n peer(s) available", "other users are found", this->rootItem->rowCount()-1);
-       this->rootItem->set(rootData);
-    }
-    else
-    {
-       rootData << QString("") << tr("No peers available", "no other users are found");
-       this->rootItem->set(rootData);
-    }
+
+    //: Number of others users found
+    rootData << QString("") << tr("%n peer(s) available", "", this->rootItem->rowCount()-1);
+    this->rootItem->set(rootData);
+
     emit changed(QModelIndex());
 }
