@@ -12,11 +12,9 @@ class ProbeFtp : public QObject
     Q_OBJECT
 public:
     ProbeFtp(const QString &host, QObject *parent = 0);
-    ~ProbeFtp();
 
 signals:
     void connected(const QString &host);
-    void done();
 
 private slots:
     void pingFinished(bool answers);

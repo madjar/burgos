@@ -2,6 +2,7 @@
 #include "buffererrorhandler.h"
 
 #include <QProcess>
+#include <QtDebug>
 
 Ping::Ping(const QString &host) : QObject(0), host(host)
 {

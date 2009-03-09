@@ -12,12 +12,6 @@ ProbeFtp::ProbeFtp(const QString &host, QObject *parent) : QObject(parent), host
     Ping::ping(host, this, SLOT(pingFinished(bool)));
 }
 
-ProbeFtp::~ProbeFtp()
-{
-    //TODO : destroyed() existe déjà
-    emit done();
-}
-
 void ProbeFtp::pingFinished(bool answers)
 {
     if (answers)

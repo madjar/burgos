@@ -54,7 +54,7 @@ void ScanFtp::knock(const QString &host)
     ProbeFtp *probe = new ProbeFtp(host, this);
     connect(probe, SIGNAL(connected(const QString&)),
             this, SIGNAL(found(const QString&)));
-    connect(probe, SIGNAL(done()),
+    connect(probe, SIGNAL(destroyed()),
             this, SLOT(probeDone()));
 }
 
