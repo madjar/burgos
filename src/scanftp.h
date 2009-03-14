@@ -5,7 +5,11 @@
 #include <QHostInfo>
 #include <QStringList>
 
+#ifdef Q_OS_WIN
+const int maxSockets = 60;
+#else
 const int maxSockets = 128;
+#endif
 
 class ScanFtp : public QObject
 {

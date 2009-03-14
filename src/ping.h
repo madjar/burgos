@@ -5,6 +5,12 @@
 #include <QString>
 #include <QProcess>
 
+#ifdef Q_OS_WIN
+const QString pingCmd = QString("ping -n 2 %1");
+#else
+const QString pingCmd = QString("ping -c 2 %1");
+#endif
+
 class Ping : public QObject
 {
     Q_OBJECT
@@ -17,18 +23,12 @@ signals:
 
 private slots:
     void signalAndSuicide(bool answers);
-
-private:
-    QString host;
-
-#ifdef Q_OS_UNIX
-private slots:
     void cmdFinished(int exitCode);
     void retry(bool retry);
 
 private:
+    QString host;
     QProcess *process;
-#endif
 };
 
 #endif // PING_H

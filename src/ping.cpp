@@ -9,7 +9,7 @@ Ping::Ping(const QString &host) : QObject(0), host(host)
     process = new QProcess(this);
     connect(process, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(cmdFinished(int)));
-    process->start(QString("ping -c 3 %1").arg(host), QIODevice::ReadOnly);
+    process->start(pingCmd.arg(host), QIODevice::ReadOnly);
 }
 
 Ping *Ping::ping(const QString &host, QObject *receiver, const char *member)
@@ -24,15 +24,20 @@ void Ping::cmdFinished(int exitCode)
     if (exitCode==2)
     {
         QByteArray error = process->readAllStandardError();
+#ifdef Q_OS_WIN
+        qDebug() << qPrintable(host) << " : "<< error.constData();
+        signalAndSuicide(false);
+#else
         if(error.contains("connect: No buffer space available"))
         {
             BufferErrorHandler::handle(this, SLOT(retry(bool)));
         }
         else
         {
-            qDebug()<<host<<"Unknown error :"<< error;
+            qDebug()<<qPrintable(host)<<" : "<< error.constData();
             signalAndSuicide(false);
         }
+#endif
     }
     else
     {
