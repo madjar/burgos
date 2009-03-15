@@ -13,7 +13,7 @@ class ScanAll : public QObject
 {
     Q_OBJECT
 public:
-    ScanAll();
+    ScanAll(QObject *parent = 0);
     void scan();
     void scan(QNetworkAddressEntry entry);
     void scan(QList<QNetworkAddressEntry> entries);

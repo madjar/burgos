@@ -6,8 +6,9 @@
 #include <QList>
 
 //TODO : gestion des limites. Par exemple, si on lance plusieurs scanners, ils ont chacun leur maximum, ce qui peut poser problème.
+//TODO gerer le suicide
 
-ScanAll::ScanAll() : QObject(0)
+ScanAll::ScanAll(QObject *parent) : QObject(parent)
 {
 }
 

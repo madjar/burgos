@@ -4,6 +4,7 @@
 #include "proxymodel.h"
 #include "scanall.h"
 #include "messagehandler.h"
+#include "scanwidget.h"
 
 #include <QHeaderView>
 #include <QNetworkInterface>
@@ -80,6 +81,9 @@ Burgos::Burgos(QWidget *parent) :
     //Et du bouton
     connect(m_ui->scanButton, SIGNAL(clicked()),
             this, SLOT(scan()));
+
+    //Le ScanWidget
+    m_ui->tabWidget->addTab(new ScanWidget(), "Scan");
 }
 
 Burgos::~Burgos()
