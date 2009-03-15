@@ -17,22 +17,32 @@ void ScanAll::scan()
     {
         foreach (QNetworkAddressEntry entry, iface.addressEntries())
         {
-            if(!entry.broadcast().isNull() && entry.ip()!=QHostAddress(QHostAddress::LocalHost))
+            if(isValid(entry))
             {
-                quint32 netmask = entry.netmask().toIPv4Address();
-                quint32 base = entry.ip().toIPv4Address() & netmask;
-                Scanner *scanner = new Scanner(base, netmask);
-                connect(scanner, SIGNAL(found(QString)),
-                        this, SIGNAL(found(QString)));
-                connect(scanner, SIGNAL(maximumChanged(int)),
-                        this, SLOT(maximum(int)));
-                connect(scanner, SIGNAL(progressChanged(int)),
-                        this, SLOT(progress(int)));
-                scanners.insert(scanner, QPair<int,int>());
-                scanner->scan();
+                scan(entry);
             }
         }
     }
+}
+
+void ScanAll::scan(QNetworkAddressEntry entry)
+{
+    quint32 netmask = entry.netmask().toIPv4Address();
+    quint32 base = entry.ip().toIPv4Address() & netmask;
+    Scanner *scanner = new Scanner(base, netmask);
+    connect(scanner, SIGNAL(found(QString)),
+            this, SIGNAL(found(QString)));
+    connect(scanner, SIGNAL(maximumChanged(int)),
+            this, SLOT(maximum(int)));
+    connect(scanner, SIGNAL(progressChanged(int)),
+            this, SLOT(progress(int)));
+    scanners.insert(scanner, QPair<int,int>());
+    scanner->scan();
+}
+
+bool ScanAll::isValid(QNetworkAddressEntry entry)
+{
+    return !entry.broadcast().isNull() && entry.ip()!=QHostAddress(QHostAddress::LocalHost);
 }
 
 void ScanAll::maximum(int value)
