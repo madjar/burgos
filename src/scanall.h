@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QPair>
 #include <QNetworkAddressEntry>
+#include <QList>
 
 class ScanAll : public QObject
 {
@@ -15,6 +16,7 @@ public:
     ScanAll();
     void scan();
     void scan(QNetworkAddressEntry entry);
+    void scan(QList<QNetworkAddressEntry> entries);
 
     static bool isValid(QNetworkAddressEntry entry);
 

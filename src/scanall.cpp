@@ -14,15 +14,9 @@ ScanAll::ScanAll() : QObject(0)
 void ScanAll::scan()
 {
     foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
-    {
         foreach (QNetworkAddressEntry entry, iface.addressEntries())
-        {
             if(isValid(entry))
-            {
                 scan(entry);
-            }
-        }
-    }
 }
 
 void ScanAll::scan(QNetworkAddressEntry entry)
@@ -40,10 +34,17 @@ void ScanAll::scan(QNetworkAddressEntry entry)
     scanner->scan();
 }
 
+void ScanAll::scan(QList<QNetworkAddressEntry> entries)
+{
+    foreach (QNetworkAddressEntry entry, entries)
+        scan(entry);
+}
+
 bool ScanAll::isValid(QNetworkAddressEntry entry)
 {
     return !entry.broadcast().isNull() && entry.ip()!=QHostAddress(QHostAddress::LocalHost);
 }
+
 
 void ScanAll::maximum(int value)
 {
