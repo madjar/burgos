@@ -1,7 +1,7 @@
 #include <QTimer>
 #include <QStringList>
 #include "cli.h"
-#include "scanftp.h"
+#include "scanall.h"
 
 Cli::Cli(FtpHandler *ftphandler, QObject *parent) :
         QThread(parent),
@@ -30,7 +30,7 @@ void Cli::run()
 
 void Cli::executeScan()
 {
-    ScanFtp *s = new ScanFtp();
+    ScanAll *s = new ScanAll();
     QObject::connect (s, SIGNAL(found(const QString&)),
                     handler, SLOT(addFtp(const QString&)));
     s->scan();

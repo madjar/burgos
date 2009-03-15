@@ -2,7 +2,7 @@
 #include "ui_burgos.h"
 #include "ftp.h"
 #include "proxymodel.h"
-#include "scanftp.h"
+#include "scanall.h"
 #include "messagehandler.h"
 
 #include <QHeaderView>
@@ -113,7 +113,7 @@ void Burgos::textEdited(const QString &string)
 void Burgos::scan()
 {
     m_ui->scanButton->setEnabled(false);
-    ScanFtp *s = new ScanFtp();
+    ScanAll *s = new ScanAll();
     QObject::connect(s, SIGNAL(maximumChanged(int)),
                    this, SIGNAL(setProgressBarMaximum(int)));
     QObject::connect(s, SIGNAL(progressChanged(int)),
