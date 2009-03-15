@@ -28,7 +28,6 @@ void ProbeFtp::pingFinished(bool answers)
         deleteLater();
 }
 
-//TODO : gestion des buffers dépassés, temps d'attente et tutti cuanti
 void ProbeFtp::ftpStateChanged(int state)
 {
     if (state == QFtp::LoggedIn)

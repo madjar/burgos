@@ -11,7 +11,8 @@ SOURCES += scanftp.cpp \
     ftp.cpp \
     domitem.cpp \
     ftphandler.cpp \
-    ping.cpp
+    ping.cpp \
+    scanner.cpp
 HEADERS += scanftp.h \
     probeftp.h \
     peer.h \
@@ -19,8 +20,9 @@ HEADERS += scanftp.h \
     ftp.h \
     domitem.h \
     ftphandler.h \
-    ping.h
-unix {
-SOURCES += buffererrorhandler.cpp
-HEADERS += buffererrorhandler.h
+    ping.h \
+    scanner.h
+unix { 
+    SOURCES += buffererrorhandler.cpp
+    HEADERS += buffererrorhandler.h
 }
