@@ -5,8 +5,6 @@
 #include <QHostAddress>
 #include <QList>
 
-//TODO : gestion des limites. Par exemple, si on lance plusieurs scanners, ils ont chacun leur maximum, ce qui peut poser problème.
-
 ScanAll::ScanAll(QObject *parent) : QObject(parent)
 {
 }
@@ -21,9 +19,11 @@ void ScanAll::scan()
                 empty = false;
                 scan(entry);
             }
-    // TODO : Dire quelque chose dans ce cas.
     if (empty)
+    {
+        qDebug() << tr("No network interface found");
         deleteLater();
+    }
 }
 
 void ScanAll::scan(QNetworkAddressEntry entry)

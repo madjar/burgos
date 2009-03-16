@@ -6,6 +6,9 @@
 #include <QHostAddress>
 #include <QStringList>
 
+//TODO avertissements mask trop large
+//TODO Scan avancé (221.182.182.192/21)
+
 ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
         QWidget(parent), ftpModel(ftpModel)
 {
