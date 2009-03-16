@@ -3,6 +3,11 @@
 #include <QApplication>
 
 #include <QtDebug>
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include "ftpmodel.h"
+#include "ftpwidget.h"
+#include "logwidget.h"
 
 Burgos::Burgos(QWidget *parent) :
         QWidget(parent)
@@ -25,6 +30,17 @@ Burgos::Burgos(QWidget *parent) :
                                         tr("Anyway, this message is going to disapear sonner or latter."),
                                         QSystemTrayIcon::Information, 2000);
     }
+
+    //Ajout des onglets
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    setLayout(layout);
+    QTabWidget *tabWidget = new QTabWidget();
+    layout->addWidget(tabWidget);
+
+    FtpModel *model = new FtpModel(this);
+
+    tabWidget->addTab(new FtpWidget(model),tr("&Ftp servers"));
+    tabWidget->addTab(new LogWidget(), tr("&Log"));
 }
 
 Burgos::~Burgos()

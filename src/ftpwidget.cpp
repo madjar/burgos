@@ -1,13 +1,14 @@
 #include "ftpwidget.h"
 #include "ui_ftpwidget.h"
 
-FtpWidget::FtpWidget(QWidget *parent) :
+#include <QtDebug>
+
+FtpWidget::FtpWidget(FtpModel *ftpModel, QWidget *parent) :
     QWidget(parent),
+    model(ftpModel),
     m_ui(new Ui::FtpWidget)
 {
     m_ui->setupUi(this);
-
-    model = new FtpModel();
 
     proxy = new ProxyModel();
     proxy->setSourceModel(model);

@@ -13,7 +13,7 @@ class FtpWidget : public QWidget {
     Q_OBJECT
     Q_DISABLE_COPY(FtpWidget)
 public:
-    explicit FtpWidget(QWidget *parent = 0);
+    explicit FtpWidget(FtpModel* ftpModel, QWidget *parent = 0);
     virtual ~FtpWidget();
 
 protected:
@@ -22,10 +22,10 @@ protected:
     void on_lineEdit_textEdited(const QString &string);
 
 private:
-    Ui::FtpWidget *m_ui;
-
     FtpModel *model;
     ProxyModel *proxy;
+
+    Ui::FtpWidget *m_ui;
 };
 
 #endif // FTPWIDGET_H
