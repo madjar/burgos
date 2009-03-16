@@ -6,7 +6,6 @@
 #include <QList>
 
 //TODO : gestion des limites. Par exemple, si on lance plusieurs scanners, ils ont chacun leur maximum, ce qui peut poser problème.
-//TODO gerer le suicide
 
 ScanAll::ScanAll(QObject *parent) : QObject(parent)
 {
@@ -14,10 +13,17 @@ ScanAll::ScanAll(QObject *parent) : QObject(parent)
 
 void ScanAll::scan()
 {
+    bool empty = true;
     foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
         foreach (QNetworkAddressEntry entry, iface.addressEntries())
             if(isValid(entry))
+            {
+                empty = false;
                 scan(entry);
+            }
+    // TODO : Dire quelque chose dans ce cas.
+    if (empty)
+        deleteLater();
 }
 
 void ScanAll::scan(QNetworkAddressEntry entry)
@@ -39,6 +45,8 @@ void ScanAll::scan(QList<QNetworkAddressEntry> entries)
 {
     foreach (QNetworkAddressEntry entry, entries)
         scan(entry);
+    if (entries.isEmpty())
+        deleteLater();
 }
 
 bool ScanAll::isValid(QNetworkAddressEntry entry)
@@ -67,10 +75,14 @@ void ScanAll::progress(int value)
     scanners[s].second = value;
 
     int total = 0;
+    bool finished = true;
     QList<QPair<int,int> > pairs = scanners.values();
     for (int i = 0; i<pairs.size(); i++)
     {
         total += pairs.at(i).second;
+        finished &= (pairs.at(i).first == pairs.at(i).second);
     }
     emit progressChanged(total);
+    if (finished)
+        deleteLater();
 }

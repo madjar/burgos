@@ -15,6 +15,7 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    void reactiveButton();
 
 private:
     Ui::ScanWidget ui;

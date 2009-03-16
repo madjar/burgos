@@ -30,12 +30,9 @@ ScanWidget::ScanWidget(QWidget *parent) : QWidget(parent)
 void ScanWidget::on_pushButton_clicked()
 {
     ui.pushButton->setEnabled(false);
-    //TODO rebrancher le bouton quand c'est fini.
     QList<QNetworkAddressEntry> entries;
     foreach (QTreeWidgetItem *item, ui.treeWidget->selectedItems())
-    {
         entries.append(items.value(item));
-    }
 
     ScanAll *scan = new ScanAll(this);
     //TODO connect to ftphandler
@@ -43,5 +40,12 @@ void ScanWidget::on_pushButton_clicked()
             ui.progressBar, SLOT(setMaximum(int)));
     connect(scan, SIGNAL(progressChanged(int)),
             ui.progressBar, SLOT(setValue(int)));
+    connect(scan, SIGNAL(destroyed()),
+            this, SLOT(reactiveButton()));
     scan->scan(entries);
+}
+
+void ScanWidget::reactiveButton()
+{
+    ui.pushButton->setEnabled(true);
 }
