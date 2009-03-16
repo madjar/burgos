@@ -1,27 +1,17 @@
 #include "burgos.h"
-#include "ui_burgos.h"
-#include "ftp.h"
-#include "proxymodel.h"
-#include "scanftp.h"
-#include "messagehandler.h"
 
-#include <QHeaderView>
-#include <QNetworkInterface>
-#include <QNetworkAddressEntry>
-#include <QHostAddress>
+#include <QApplication>
 
 #include <QtDebug>
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include "ftpmodel.h"
+#include "ftpwidget.h"
+#include "logwidget.h"
 
 Burgos::Burgos(QWidget *parent) :
-        QWidget(parent),
-        m_ui(new Ui::Burgos)
+        QWidget(parent)
 {
-
-    m_ui->setupUi(this);
-
-    connect(MessageHandler::pick(), SIGNAL(appendLog(const QString &)),
-            m_ui->plainTextEdit, SLOT(appendPlainText(const QString &)));
-
     this->createIcon();
 
     this->setWindowIcon(*this->icon);
@@ -41,90 +31,22 @@ Burgos::Burgos(QWidget *parent) :
                                         QSystemTrayIcon::Information, 2000);
     }
 
-    model = new FtpModel();
+    //Ajout des onglets
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    setLayout(layout);
+    QTabWidget *tabWidget = new QTabWidget();
+    layout->addWidget(tabWidget);
 
-    proxy = new ProxyModel();
-    proxy->setSourceModel(model);
-    proxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    FtpModel *model = new FtpModel(this);
 
-
-    m_ui->treeView->setModel(proxy);
-    m_ui->treeView->setSortingEnabled(true);
-    m_ui->treeView->sortByColumn(0,Qt::AscendingOrder);
-    m_ui->treeView->header()->setStretchLastSection(false);
-    m_ui->treeView->header()->setResizeMode(1,QHeaderView::ResizeToContents);
-    m_ui->treeView->header()->setResizeMode(0,QHeaderView::Stretch);
-    m_ui->treeView->setAnimated(true);
-
-
-    connect(m_ui->lineEdit,SIGNAL(returnPressed()),
-            this,SLOT(returnPressed()));
-    connect(m_ui->lineEdit,SIGNAL(textEdited(const QString &)),
-            this,SLOT(textEdited(const QString &)));
-
-    //affichage des pairs
-    this->peer = new PeerModel();
-    m_ui->peerView->setModel(peer);
-    m_ui->peerView->setSortingEnabled(false);
-    m_ui->peerView->setItemsExpandable(false);
-    m_ui->peerView->setRootIsDecorated(false);
-
-    connect(peer, SIGNAL(changed(QModelIndex)),
-            m_ui->peerView, SLOT(update(QModelIndex)));
-
-    //Config de la ProgressBar
-    connect(this, SIGNAL(setProgressBarMaximum(int)),
-            m_ui->progressBar, SLOT(setMaximum(int)));
-    connect(this, SIGNAL(setProgressBarValue(int)),
-            m_ui->progressBar, SLOT(setValue(int)));
-    //Et du bouton
-    connect(m_ui->scanButton, SIGNAL(clicked()),
-            this, SLOT(scan()));
+    tabWidget->addTab(new FtpWidget(model),tr("&Ftp servers"));
+    tabWidget->addTab(new LogWidget(), tr("&Log"));
 }
 
 Burgos::~Burgos()
 {
-    delete m_ui;
     if (icon)
         delete icon;
-}
-
-void Burgos::returnPressed()
-{
-    QString text = m_ui->lineEdit->text();
-    if (text.startsWith("addftp:"))
-    {
-        model->addFtp(text.split(':').at(1));
-        m_ui->lineEdit->clear();
-    }
-    else if (!text.isEmpty())
-    {
-        proxy->setFilterWildcard(text);
-        m_ui->treeView->expandAll();
-    }
-}
-
-void Burgos::textEdited(const QString &string)
-{
-    if (string.isEmpty())
-    {
-        // Hack tout moche pour résoudre le bug #321871
-        proxy->setFilterWildcard(string);
-        proxy->setFilterWildcard(string);
-    }
-}
-
-void Burgos::scan()
-{
-    m_ui->scanButton->setEnabled(false);
-    ScanFtp *s = new ScanFtp();
-    QObject::connect(s, SIGNAL(maximumChanged(int)),
-                   this, SIGNAL(setProgressBarMaximum(int)));
-    QObject::connect(s, SIGNAL(progressChanged(int)),
-                   this, SIGNAL(setProgressBarValue(int)));
-    QObject::connect (s, SIGNAL(found(const QString&)),
-                    this->model, SLOT(addFtp(const QString&)));
-    s->scan();
 }
 
 void Burgos::closeEvent(QCloseEvent *event)
@@ -164,17 +86,6 @@ void Burgos::hideShow(QSystemTrayIcon::ActivationReason reason)
             this->showMinimized();
             this->hide();
         }
-    }
-}
-
-void Burgos::changeEvent(QEvent *event)
-{
-    switch(event->type()) {
-    case QEvent::LanguageChange:
-        m_ui->retranslateUi(this);
-        break;
-    default:
-        break;
     }
 }
 
