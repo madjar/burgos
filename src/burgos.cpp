@@ -83,7 +83,7 @@ Burgos::Burgos(QWidget *parent) :
             this, SLOT(scan()));
 
     //Le ScanWidget
-    m_ui->tabWidget->addTab(new ScanWidget(), "Scan");
+    m_ui->tabWidget->addTab(new ScanWidget(model), "Scan");
 }
 
 Burgos::~Burgos()

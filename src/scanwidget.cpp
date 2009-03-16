@@ -6,7 +6,8 @@
 #include <QHostAddress>
 #include <QStringList>
 
-ScanWidget::ScanWidget(QWidget *parent) : QWidget(parent)
+ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
+        QWidget(parent), ftpModel(ftpModel)
 {
     ui.setupUi(this);
 
@@ -35,13 +36,15 @@ void ScanWidget::on_pushButton_clicked()
         entries.append(items.value(item));
 
     ScanAll *scan = new ScanAll(this);
-    //TODO connect to ftphandler
+    connect(scan, SIGNAL(found(QString)),
+            ftpModel, SLOT(addFtp(QString)));
     connect(scan, SIGNAL(maximumChanged(int)),
             ui.progressBar, SLOT(setMaximum(int)));
     connect(scan, SIGNAL(progressChanged(int)),
             ui.progressBar, SLOT(setValue(int)));
     connect(scan, SIGNAL(destroyed()),
             this, SLOT(reactiveButton()));
+
     scan->scan(entries);
 }
 
