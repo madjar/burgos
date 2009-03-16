@@ -16,10 +16,12 @@ public:
     explicit FtpWidget(FtpModel* ftpModel, QWidget *parent = 0);
     virtual ~FtpWidget();
 
-protected:
-    virtual void changeEvent(QEvent *e);
+protected slots:
     void on_lineEdit_returnPressed();
     void on_lineEdit_textEdited(const QString &string);
+
+protected:
+    virtual void changeEvent(QEvent *e);
 
 private:
     FtpModel *model;
