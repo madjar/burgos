@@ -6,8 +6,12 @@
 
 FtpModel::FtpModel(QObject *parent) : QAbstractItemModel(parent)
 {
-    connect(&ftpHandler,SIGNAL(itemUpdated(DomItem*)),
+    connect(&ftpHandler, SIGNAL(itemUpdated(DomItem*)),
             this, SLOT(itemUpdated(DomItem*)));
+    connect (&ftpHandler, SIGNAL(beginAddFtp(int)),
+             this, SLOT(beginAddFtp(int)));
+    connect (&ftpHandler, SIGNAL(endAddFtp()),
+             this, SLOT(endAddFtp()));
 }
 
 QModelIndex FtpModel::index(int row, int column, const QModelIndex &parent) const
@@ -119,9 +123,16 @@ QVariant FtpModel::headerData(int section,  Qt::Orientation orientation, int rol
 
 void FtpModel::addFtp(const QString &host)
 {
-    int pos = ftpHandler.size();
-    beginInsertRows(QModelIndex(), pos, pos);
     ftpHandler.addFtp(host);
+}
+
+void FtpModel::beginAddFtp(int pos)
+{
+    beginInsertRows(QModelIndex(), pos, pos);
+}
+
+void FtpModel::endAddFtp()
+{
     endInsertRows();
 }
 
