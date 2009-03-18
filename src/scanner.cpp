@@ -2,7 +2,6 @@
 
 #include "probeftp.h"
 #include <QHostAddress>
-#include <cmath>
 
 
 Scanner::Scanner(quint32 base, quint32 mask) : QObject(0), progress (0)
@@ -13,11 +12,12 @@ Scanner::Scanner(quint32 base, quint32 mask) : QObject(0), progress (0)
 
 void Scanner::scan()
 {
-    while (current < base + maxProbe)
+    const int number = ~mask;
+    while (current <= base + qMin(maxProbe, number))
     {
         probe(current);
     }
-    emit maximumChanged(~mask);
+    emit maximumChanged(~mask + 1);
 }
 
 void Scanner::probeDone()
@@ -28,7 +28,7 @@ void Scanner::probeDone()
     {
         probe(current);
     }
-    if (progress == ~mask)
+    if (progress >= ~mask)
     {
         deleteLater();
     }
