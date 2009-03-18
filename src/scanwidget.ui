@@ -54,7 +54,7 @@
      </column>
      <column>
       <property name="text">
-       <string>Subnet mask</string>
+       <string>Scan size</string>
       </property>
      </column>
     </widget>

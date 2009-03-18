@@ -26,6 +26,14 @@ private:
 
     QMap<QTreeWidgetItem *, QNetworkAddressEntry> items;
     FtpModel *ftpModel;
+
+#if QT_VERSION >= 0x040500
+private slots:
+    void on_treeWidget_itemClicked(QTreeWidgetItem* item, int column);
+    void on_treeWidget_itemChanged(QTreeWidgetItem* item, int column);
+private:
+    const QString addCustom;
+#endif
 };
 
 #endif // SCANWIDGET_H
