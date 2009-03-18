@@ -5,6 +5,7 @@
 #include <QHostAddress>
 #include <QStringList>
 #include <QPair>
+#include <QHeaderView>
 #include <cmath>
 
 //TODO avertissements mask trop large
@@ -29,7 +30,11 @@ ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
             if (ScanAll::isValid(entry))
             {
                 QTreeWidgetItem *item = new QTreeWidgetItem(ui.treeWidget);
+#if QT_VERSION >= 0x040500
                 item->setText(0, iface.humanReadableName());
+#else
+                item->setText(0, iface.name());
+#endif
                 item->setText(1, entry.ip().toString());
                 item->setText(2, QString::number (~(entry.netmask().toIPv4Address())+1));
                 items[item] = entry;

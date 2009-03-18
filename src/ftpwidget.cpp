@@ -1,7 +1,7 @@
 #include "ftpwidget.h"
 #include "ui_ftpwidget.h"
 
-#include <QtDebug>
+#include <QHeaderView>
 
 FtpWidget::FtpWidget(FtpModel *ftpModel, QWidget *parent) :
     QWidget(parent),
