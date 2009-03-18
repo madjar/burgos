@@ -26,10 +26,8 @@ void ScanAll::scan()
     }
 }
 
-void ScanAll::scan(QNetworkAddressEntry entry)
+void ScanAll::scan(quint32 base, quint32 netmask)
 {
-    quint32 netmask = entry.netmask().toIPv4Address();
-    quint32 base = entry.ip().toIPv4Address() & netmask;
     Scanner *scanner = new Scanner(base, netmask);
     connect(scanner, SIGNAL(found(QString)),
             this, SIGNAL(found(QString)));
@@ -39,6 +37,13 @@ void ScanAll::scan(QNetworkAddressEntry entry)
             this, SLOT(progress(int)));
     scanners.insert(scanner, QPair<int,int>());
     scanner->scan();
+}
+
+void ScanAll::scan(QNetworkAddressEntry entry)
+{
+    quint32 netmask = entry.netmask().toIPv4Address();
+    quint32 base = entry.ip().toIPv4Address() & netmask;
+    scan(base, netmask);
 }
 
 void ScanAll::scan(QList<QNetworkAddressEntry> entries)

@@ -5,7 +5,29 @@
   <property name="enabled">
    <bool>true</bool>
   </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>264</width>
+    <height>231</height>
+   </rect>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Scan</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar"/>
+     </item>
+    </layout>
+   </item>
    <item>
     <widget class="QTreeWidget" name="treeWidget">
      <property name="alternatingRowColors">
@@ -36,20 +58,6 @@
       </property>
      </column>
     </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>Scan</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QProgressBar" name="progressBar"/>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>

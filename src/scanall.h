@@ -15,6 +15,7 @@ class ScanAll : public QObject
 public:
     ScanAll(QObject *parent = 0);
     void scan();
+    void scan(quint32 base, quint32 netmask);
     void scan(QNetworkAddressEntry entry);
     void scan(QList<QNetworkAddressEntry> entries);
 

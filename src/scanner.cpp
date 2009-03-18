@@ -11,13 +11,6 @@ Scanner::Scanner(quint32 base, quint32 mask) : QObject(0), progress (0)
 {
 }
 
-Scanner::Scanner(const QString &subnet) : QObject(0), progress (0)
-        , mask(~((quint32) pow(2,32 - QHostAddress::parseSubnet(subnet).second)-1))
-        , base(QHostAddress::parseSubnet(subnet).first.toIPv4Address())
-        , current(base)
-{
-}
-
 void Scanner::scan()
 {
     while (current < base + maxProbe)

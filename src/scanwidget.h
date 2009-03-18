@@ -3,6 +3,7 @@
 
 #include "ui_scanwidget.h"
 #include "ftpmodel.h"
+#include "scanall.h"
 
 #include <QWidget>
 #include <QTreeWidget>
@@ -19,6 +20,8 @@ private slots:
     void reactiveButton();
 
 private:
+    ScanAll *newScanAll();
+
     Ui::ScanWidget ui;
 
     QMap<QTreeWidgetItem *, QNetworkAddressEntry> items;

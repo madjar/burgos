@@ -1,5 +1,4 @@
 #include "scanwidget.h"
-#include "scanall.h"
 
 #include <QHBoxLayout>
 #include <QNetworkInterface>
@@ -13,6 +12,10 @@ ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
         QWidget(parent), ftpModel(ftpModel)
 {
     ui.setupUi(this);
+
+    ui.treeWidget->header()->setResizeMode(0,QHeaderView::ResizeToContents);
+    ui.treeWidget->header()->setResizeMode(1,QHeaderView::ResizeToContents);
+    ui.treeWidget->header()->setResizeMode(2,QHeaderView::ResizeToContents);
 
     foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
     {
@@ -38,6 +41,16 @@ void ScanWidget::on_pushButton_clicked()
     foreach (QTreeWidgetItem *item, ui.treeWidget->selectedItems())
         entries.append(items.value(item));
 
+    newScanAll()->scan(entries);
+}
+
+void ScanWidget::reactiveButton()
+{
+    ui.pushButton->setEnabled(true);
+}
+
+ScanAll *ScanWidget::newScanAll()
+{
     ScanAll *scan = new ScanAll(this);
     connect(scan, SIGNAL(found(QString)),
             ftpModel, SLOT(addFtp(QString)));
@@ -47,11 +60,5 @@ void ScanWidget::on_pushButton_clicked()
             ui.progressBar, SLOT(setValue(int)));
     connect(scan, SIGNAL(destroyed()),
             this, SLOT(reactiveButton()));
-
-    scan->scan(entries);
-}
-
-void ScanWidget::reactiveButton()
-{
-    ui.pushButton->setEnabled(true);
+    return scan;
 }
