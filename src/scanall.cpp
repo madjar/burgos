@@ -54,6 +54,19 @@ void ScanAll::scan(QList<QNetworkAddressEntry> entries)
         deleteLater();
 }
 
+void ScanAll::scanIface(const QString &ifname)
+{
+    QNetworkInterface iface = QNetworkInterface::interfaceFromName(ifname);
+    if (iface.isValid())
+    {
+        foreach (QNetworkAddressEntry entry, iface.addressEntries())
+            if(isValid(entry))
+                scan(entry);
+    }
+    else
+        qDebug() << ifname << qPrintable(tr(": invalid network interface"));
+}
+
 bool ScanAll::isValid(QNetworkAddressEntry entry)
 {
     return !entry.broadcast().isNull() && entry.ip()!=QHostAddress(QHostAddress::LocalHost);
