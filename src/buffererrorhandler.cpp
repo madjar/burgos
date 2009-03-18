@@ -39,8 +39,8 @@ int BufferErrorHandler::increaseBuffer()
                                     "net.ipv4.neigh.default.gc_thresh1=1024");
     QTextStream out(stdout, QIODevice::WriteOnly);
     if (!result)
-        out<< QCoreApplication::translate("Utils","Buffer size increased.\n");
+        out<< tr("Buffer size increased.\n");
     else
-        out<< QCoreApplication::translate("Utils","Operation failed, please check you've got admin rights.\n");
+        out<< tr("Operation failed, please check you've got admin rights.\n");
     return result;
 }

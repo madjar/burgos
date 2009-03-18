@@ -50,7 +50,7 @@ ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
     item->setToolTip(0, tr("You can use the following forms :"
 "<ul><li> 123.123.123.123/n where n is any value between 0 and 32"
 "<li> 123.123.123.123/255.255.255.255"
-"<li> missing trailing components (i.e., less than 4 octets, like \"192.168.1\"), followed or not by a dot. If the netmask is also missing in that case, it is set to the number of octets actually passed (in the example above, it would be 24, for 3 octets).</ul>"));
+"<li> missing trailing components (i.e., less than 4 octets, like \"192.168.1\"), followed or not by a dot</ul>"));
 #endif
 }
 

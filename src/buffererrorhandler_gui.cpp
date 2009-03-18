@@ -13,10 +13,10 @@ bool BufferErrorHandler::bufferProblem()
     QString cmd = QCoreApplication::arguments().at(0) + " --increase-buffer";
 
     QMessageBox msg;
-    msg.setText(QCoreApplication::translate("Utils","Connection limit reached"));
-    msg.setInformativeText(QCoreApplication::translate("Utils","Burgos isn't able to scan any more servers. "
+    msg.setText(tr("Connection limit reached"));
+    msg.setInformativeText(tr("Burgos isn't able to scan any more servers. "
                               "In order to solve this problem, Burgos needs to modify one of your kernel's settings."));
-    msg.setDetailedText(QCoreApplication::translate("Utils","For the nerdy ones, the problem is that ping says there no buffer space available. We're going to increase the size of the arp table by running that command :\n"
+    msg.setDetailedText(tr("For the nerdy ones, the problem is that ping says there no buffer space available. We're going to increase the size of the arp table by running that command :\n"
                            "%1").arg(cmd));
     msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Abort);
     msg.setDefaultButton(QMessageBox::Ok);
@@ -37,7 +37,7 @@ bool BufferErrorHandler::bufferProblem()
         switch(pos)
         {
         case 4: // Rien
-            QMessageBox::critical(0, QCoreApplication::translate("Utils","Unable to execute the command"), QCoreApplication::translate("Utils","Please run this command yourself :\n%1").arg(cmd));
+            QMessageBox::critical(0, tr("Unable to execute the command"), tr("Please run this command yourself :\n%1").arg(cmd));
             return false;
         default:
             return QProcess::execute(list.at(pos) + ' ' + '"' + cmd + '"');
