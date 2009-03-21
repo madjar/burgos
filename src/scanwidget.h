@@ -24,6 +24,8 @@ private:
 
     Ui::ScanWidget ui;
 
+    bool scanInProgress;
+
     QMap<QTreeWidgetItem *, QNetworkAddressEntry> items;
     FtpModel *ftpModel;
 

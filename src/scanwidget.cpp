@@ -56,21 +56,27 @@ ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
 
 void ScanWidget::on_pushButton_clicked()
 {
-    ui.pushButton->setEnabled(false);
-    QList<QNetworkAddressEntry> entries;
-    foreach (QTreeWidgetItem *item, ui.treeWidget->selectedItems())
-        entries.append(items.value(item));
+    if (!scanInProgress)
+    {
+        QList<QNetworkAddressEntry> entries;
+        foreach (QTreeWidgetItem *item, ui.treeWidget->selectedItems())
+            entries.append(items.value(item));
 
-    newScanAll()->scan(entries);
+        newScanAll()->scan(entries);
+    }
 }
 
 void ScanWidget::reactiveButton()
 {
-    ui.pushButton->setEnabled(true);
+    scanInProgress = false;
+    ui.pushButton->setText(tr("Scan"));
+    //TODO ce texte apparait à trois endroits différents. (ui et ici)
 }
 
 ScanAll *ScanWidget::newScanAll()
 {
+    ui.pushButton->setText(tr("Cancel"));
+    scanInProgress = true;
     ScanAll *scan = new ScanAll(this);
     connect(scan, SIGNAL(found(QString)),
             ftpModel, SLOT(addFtp(QString)));
@@ -80,6 +86,8 @@ ScanAll *ScanWidget::newScanAll()
             ui.progressBar, SLOT(setValue(int)));
     connect(scan, SIGNAL(destroyed()),
             this, SLOT(reactiveButton()));
+    connect(ui.pushButton, SIGNAL(clicked()),
+            scan, SLOT(deleteLater()));
     return scan;
 }
 

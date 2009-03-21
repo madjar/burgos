@@ -28,7 +28,7 @@ void ScanAll::scan()
 
 void ScanAll::scan(quint32 base, quint32 netmask)
 {
-    Scanner *scanner = new Scanner(base, netmask);
+    Scanner *scanner = new Scanner(this, base, netmask);
     connect(scanner, SIGNAL(found(QString)),
             this, SIGNAL(found(QString)));
     connect(scanner, SIGNAL(maximumChanged(int)),

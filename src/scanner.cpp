@@ -3,32 +3,30 @@
 #include "probeftp.h"
 #include <QHostAddress>
 
-
-Scanner::Scanner(quint32 base, quint32 mask) : QObject(0), progress (0)
-        , mask(mask), base(base & mask) // Clean the base in case it's not.
+Scanner::Scanner(QObject *parent, quint32 base, quint32 mask) : QObject(parent), progress (0)
+        , number(~mask + 1), base(base & mask) // Clean the base in case it's not.
         , current(base)
 {
 }
 
 void Scanner::scan()
 {
-    const int number = ~mask;
     while (current <= base + qMin(maxProbe, number))
     {
         probe(current);
     }
-    emit maximumChanged(~mask + 1);
+    emit maximumChanged(number);
 }
 
 void Scanner::probeDone()
 {
     progress+=1;
     emit progressChanged(progress);
-    if (current <= base + ~mask)
+    if (current <= base + number)
     {
         probe(current);
     }
-    if (progress >= ~mask)
+    if (progress >= number)
     {
         deleteLater();
     }
@@ -52,5 +50,3 @@ void Scanner::probe(quint32 host)
                 this, SLOT(probeDone()));
     }
 }
-
-

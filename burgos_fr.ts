@@ -215,16 +215,23 @@
         <translation>Vous pouvez utiliser une des formes suivantes :&lt;ul&gt;&lt;li&gt; 123.123.123.123/n où n est un nombre en 0 et 32&lt;li&gt; 123.123.123.123/255.255.255.255&lt;li&gt; dernière composantes manquantes (par exemple, moins de 4 octets, comme &quot;192.168.1&quot;), suivit ou non par un point&lt;/ul&gt;</translation>
     </message>
     <message>
-        <location filename="src/scanwidget.cpp" line="107"/>
+        <location filename="src/scanwidget.cpp" line="78"/>
+        <source>Cancel</source>
+        <oldsource>&amp;Cancel</oldsource>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <location filename="src/scanwidget.cpp" line="115"/>
         <source>Invalid entry</source>
         <translation>Entrée non valide</translation>
     </message>
     <message>
-        <location filename="src/scanwidget.cpp" line="112"/>
+        <location filename="src/scanwidget.cpp" line="120"/>
         <source>Custom</source>
         <translation>Personnalisé</translation>
     </message>
     <message>
+        <location filename="src/scanwidget.cpp" line="72"/>
         <location filename="src/scanwidget.ui" line="22"/>
         <source>Scan</source>
         <translation>Scanner</translation>

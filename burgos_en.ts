@@ -215,16 +215,23 @@
         <translation>You can use the following forms :&lt;ul&gt;&lt;li&gt; 123.123.123.123/n where n is any value between 0 and 32&lt;li&gt; 123.123.123.123/255.255.255.255&lt;li&gt; missing trailing components (i.e., less than 4 octets, like &quot;192.168.1&quot;), followed or not by a dot&lt;/ul&gt;</translation>
     </message>
     <message>
-        <location filename="src/scanwidget.cpp" line="107"/>
+        <location filename="src/scanwidget.cpp" line="78"/>
+        <source>Cancel</source>
+        <oldsource>&amp;Cancel</oldsource>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="src/scanwidget.cpp" line="115"/>
         <source>Invalid entry</source>
         <translation>Invalid entry</translation>
     </message>
     <message>
-        <location filename="src/scanwidget.cpp" line="112"/>
+        <location filename="src/scanwidget.cpp" line="120"/>
         <source>Custom</source>
         <translation>Custom</translation>
     </message>
     <message>
+        <location filename="src/scanwidget.cpp" line="72"/>
         <location filename="src/scanwidget.ui" line="22"/>
         <source>Scan</source>
         <translation>Scan</translation>
