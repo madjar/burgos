@@ -41,6 +41,8 @@ Burgos::Burgos(QWidget *parent) :
 
     tabWidget->addTab(new FtpWidget(model),tr("&Ftp servers"));
     tabWidget->addTab(new LogWidget(), tr("&Log"));
+
+    resize(sizeHint()); //Needed for the size to ba saved when the widget is hidden
 }
 
 Burgos::~Burgos()
@@ -73,17 +75,15 @@ void Burgos::hideShow(QSystemTrayIcon::ActivationReason reason)
         reason == QSystemTrayIcon::MiddleClick ||
         reason == QSystemTrayIcon::Unknown)
     {
-        if (this->isMinimized())
+        if (!this->isVisible())
         {
             this->hideShowAction->setText(tr("&Hide"));
-            this->show();
             this->showNormal();
             this->activateWindow();
         }
         else
         {
             this->hideShowAction->setText(tr("&Show"));
-            this->showMinimized();
             this->hide();
         }
     }
