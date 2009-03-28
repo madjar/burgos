@@ -23,6 +23,10 @@ ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
     ui.treeWidget->header()->setResizeMode(1,QHeaderView::ResizeToContents);
     ui.treeWidget->header()->setResizeMode(2,QHeaderView::ResizeToContents);
 
+    // Select the interface with the smaller submask
+    quint32 minSize = -1; //It's 0x111....111
+    QTreeWidgetItem *maxItem = 0;
+
     foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
     {
         foreach (QNetworkAddressEntry entry, iface.addressEntries())
@@ -36,11 +40,20 @@ ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
                 item->setText(0, iface.name());
 #endif
                 item->setText(1, entry.ip().toString());
-                item->setText(2, QString::number (~(entry.netmask().toIPv4Address())+1));
+                quint32 size = ~(entry.netmask().toIPv4Address())+1;
+                item->setText(2, QString::number (size));
                 items[item] = entry;
+
+                if (size < minSize)
+                {
+                    minSize = size;
+                    maxItem = item;
+                }
             }
         }
     }
+
+    maxItem->setSelected(true);
 
 #if QT_VERSION >= 0x040500 // Only for Qt 4.5 and later
     QTreeWidgetItem *item = new QTreeWidgetItem(ui.treeWidget, 1000);
