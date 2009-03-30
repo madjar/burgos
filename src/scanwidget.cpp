@@ -8,11 +8,8 @@
 #include <QHeaderView>
 #include <cmath>
 
-//TODO avertissements mask trop large
-//TODO Scan avancé (221.182.182.192/21)
-
 ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
-        QWidget(parent), ftpModel(ftpModel)
+        QWidget(parent), ftpModel(ftpModel), scanInProgress(false)
 #if QT_VERSION >= 0x040500
         , addCustom(tr("Add custom scan"))
 #endif
@@ -24,7 +21,7 @@ ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
     ui.treeWidget->header()->setResizeMode(2,QHeaderView::ResizeToContents);
 
     // Select the interface with the smaller submask
-    quint32 minSize = -1; //It's 0x111....111
+    quint32 minSize = 0xFFFFFFFF;
     QTreeWidgetItem *maxItem = 0;
 
     foreach (QNetworkInterface iface, QNetworkInterface::allInterfaces())
@@ -83,7 +80,7 @@ void ScanWidget::reactiveButton()
 {
     scanInProgress = false;
     ui.pushButton->setText(tr("Scan"));
-    //TODO ce texte apparait à trois endroits différents. (ui et ici)
+    //TODO ce texte apparait �  trois endroits différents. (ui et ici)
 }
 
 ScanAll *ScanWidget::newScanAll()

@@ -24,10 +24,9 @@ private:
 
     Ui::ScanWidget ui;
 
-    bool scanInProgress;
-
     QMap<QTreeWidgetItem *, QNetworkAddressEntry> items;
     FtpModel *ftpModel;
+    bool scanInProgress;
 
 #if QT_VERSION >= 0x040500
 private slots:
