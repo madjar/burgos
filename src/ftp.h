@@ -36,7 +36,7 @@ private:
     QString hostString;
     DomItem *root;
 
-    static QString sanitize(QString string);
+    static QString sanitize(const QString &string);
 
     void suicide();
     void processNextDirectory();
