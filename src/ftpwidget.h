@@ -19,6 +19,7 @@ public:
 protected slots:
     void on_lineEdit_returnPressed();
     void on_lineEdit_textEdited(const QString &string);
+    void on_treeView_doubleClicked(const QModelIndex & index);
 
 protected:
     virtual void changeEvent(QEvent *e);

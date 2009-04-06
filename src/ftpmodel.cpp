@@ -3,6 +3,7 @@
 
 #include "ftpmodel.h"
 #include "domitem.h"
+#include "def.h"
 
 FtpModel::FtpModel(QObject *parent) : QAbstractItemModel(parent)
 {
@@ -84,7 +85,7 @@ QVariant FtpModel::data(const QModelIndex &index, int role) const
         default:
             return QVariant();
         }
-    case Qt::UserRole:  //Used when sorting
+    case Burgos::SortRole:
         switch (index.column())
         {
         case 0:
@@ -93,6 +94,11 @@ QVariant FtpModel::data(const QModelIndex &index, int role) const
             return recursiveSize(item->node());
         default:
             return QVariant();
+        }
+    case Burgos::UrlRole:
+        {
+            return data(index.parent(), Burgos::UrlRole).toString() + QString("/")
+                    + item->node().attributes().namedItem("name").nodeValue();
         }
     case Qt::DecorationRole:
         if (index.column() == 0)

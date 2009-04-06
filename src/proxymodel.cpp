@@ -1,6 +1,7 @@
 #include "proxymodel.h"
 #include "ftpmodel.h"
 #include "domitem.h"
+#include "def.h"
 
 #include <QtXml>
 #include <QSortFilterProxyModel>
@@ -9,7 +10,7 @@ ProxyModel::ProxyModel(QObject *parent) :
         QSortFilterProxyModel (parent)
 {
     setSortCaseSensitivity ( Qt::CaseInsensitive );
-    setSortRole(Qt::UserRole);
+    setSortRole(Burgos::SortRole);
 }
 
 bool ProxyModel::lessThan(const QModelIndex &left,
