@@ -21,7 +21,8 @@ HEADERS += probeftp.h \
     ftphandler.h \
     ping.h \
     scanner.h \
-    scanall.h
+    scanall.h \
+    def.h
 unix { 
     SOURCES += buffererrorhandler.cpp
     HEADERS += buffererrorhandler.h

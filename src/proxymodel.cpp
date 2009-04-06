@@ -1,6 +1,7 @@
 #include "proxymodel.h"
 #include "ftpmodel.h"
 #include "domitem.h"
+#include "def.h"
 
 #include <QtXml>
 #include <QSortFilterProxyModel>
@@ -9,6 +10,7 @@ ProxyModel::ProxyModel(QObject *parent) :
         QSortFilterProxyModel (parent)
 {
     setSortCaseSensitivity ( Qt::CaseInsensitive );
+    setSortRole(Burgos::SortRole);
 }
 
 bool ProxyModel::lessThan(const QModelIndex &left,
@@ -23,6 +25,10 @@ bool ProxyModel::lessThan(const QModelIndex &left,
     {
         return leftFile->node().nodeName()=="dir";
     }
+
+    //Hack moche pour avoir un vrai classement décroissant sur la taille.
+    if (left.column()==1)
+        return !QSortFilterProxyModel::lessThan(left, right);
 
     return QSortFilterProxyModel::lessThan(left, right);
 }

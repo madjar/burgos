@@ -1,7 +1,10 @@
 #include "ftpwidget.h"
 #include "ui_ftpwidget.h"
+#include "def.h"
 
 #include <QHeaderView>
+#include <QDesktopServices>
+#include <QUrl>
 
 FtpWidget::FtpWidget(FtpModel *ftpModel, QWidget *parent) :
     QWidget(parent),
@@ -49,6 +52,14 @@ void FtpWidget::on_lineEdit_textEdited(const QString &string)
         proxy->setFilterWildcard(string);
         proxy->setFilterWildcard(string);
     }
+}
+
+void FtpWidget::on_treeView_doubleClicked(const QModelIndex & index)
+{
+    QDesktopServices::openUrl(
+            QUrl(QString("ftp:/")
+                 + proxy->data(index, Burgos::UrlRole).toString()));
+    // Burgos::UrlRole return something like "/myhost/mydir/myfile"
 }
 
 void FtpWidget::changeEvent(QEvent *e)

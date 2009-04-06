@@ -3,6 +3,7 @@
 
 #include "ftpmodel.h"
 #include "domitem.h"
+#include "def.h"
 
 FtpModel::FtpModel(QObject *parent) : QAbstractItemModel(parent)
 {
@@ -70,9 +71,6 @@ QVariant FtpModel::data(const QModelIndex &index, int role) const
     if (role == Qt::TextAlignmentRole && index.column() == 1)
         return Qt::AlignRight;
 
-    if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::DecorationRole)
-        return QVariant();
-
     DomItem *item = static_cast<DomItem*>(index.internalPointer());
     switch (role)
     {
@@ -86,6 +84,21 @@ QVariant FtpModel::data(const QModelIndex &index, int role) const
             return humanReadableSize(recursiveSize(item->node()));
         default:
             return QVariant();
+        }
+    case Burgos::SortRole:
+        switch (index.column())
+        {
+        case 0:
+            return item->node().attributes().namedItem("name").nodeValue();
+        case 1:
+            return recursiveSize(item->node());
+        default:
+            return QVariant();
+        }
+    case Burgos::UrlRole:
+        {
+            return data(index.parent(), Burgos::UrlRole).toString() + QString("/")
+                    + item->node().attributes().namedItem("name").nodeValue();
         }
     case Qt::DecorationRole:
         if (index.column() == 0)
