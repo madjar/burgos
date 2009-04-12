@@ -3,10 +3,10 @@
 
 #include <QObject>
 
-#ifdef Q_OS_WIN
-const quint32 maxProbe = 60;
-#else
+#ifdef Q_OS_LINUX
 const quint32 maxProbe = 128;
+#else
+const quint32 maxProbe = 60;
 #endif
 
 class Scanner : public QObject

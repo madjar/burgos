@@ -6,7 +6,7 @@
 #include <QProcess>
 
 #ifdef Q_OS_WIN
-const QString pingCmd = QString("ping -n 2 %1");
+const QString pingCmd = QString("ping -n 2 -w 5000 %1");
 #else
 const QString pingCmd = QString("ping -c 2 %1");
 #endif
