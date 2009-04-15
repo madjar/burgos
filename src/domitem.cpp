@@ -54,7 +54,7 @@ QDomElement DomItem::element() const
     return domNode.toElement();
 }
 
-DomItem *DomItem::newChild(QString tagName)
+DomItem *DomItem::newChild(const QString &tagName)
 {
     QDomNode newNode = domNode.ownerDocument().createElement(tagName);
     int i = domNode.childNodes().count(); //Position à laquelle on ajoute le QDomNode, ie sa ligne.

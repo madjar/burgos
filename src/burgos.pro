@@ -6,6 +6,7 @@ SOURCES += main.cpp \
     proxymodel.cpp \
     burgos.cpp \
     peermodel.cpp \
+    scanwidget.cpp \
     logwidget.cpp \
     ftpwidget.cpp
 HEADERS += ftpmodel.h \
@@ -13,7 +14,10 @@ HEADERS += ftpmodel.h \
     burgos.h \
     peermodel.h \
     logwidget.h \
-    ftpwidget.h
+    ftpwidget.h \
+    scanwidget.h
 FORMS += logwidget.ui \
-    ftpwidget.ui
+    ftpwidget.ui \
+    scanwidget.ui
 RESOURCES += burgos.qrc
+unix:SOURCES += buffererrorhandler_gui.cpp

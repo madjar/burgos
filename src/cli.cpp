@@ -1,7 +1,6 @@
-#include <QTimer>
 #include <QStringList>
 #include "cli.h"
-#include "scanftp.h"
+#include "scanall.h"
 
 Cli::Cli(FtpHandler *ftphandler, QObject *parent) :
         QThread(parent),
@@ -15,8 +14,8 @@ Cli::Cli(FtpHandler *ftphandler, QObject *parent) :
             handler, SLOT(addFtp(const QString&)));
     connect(this, SIGNAL(print(QTextStream*)),
             handler, SLOT(print(QTextStream*)));
-    connect(this, SIGNAL(scan()),
-            this, SLOT(executeScan()));
+    connect(this, SIGNAL(scan(const QString &)),
+            this, SLOT(executeScan(const QString &)));
 }
 
 void Cli::run()
@@ -28,12 +27,15 @@ void Cli::run()
     }
 }
 
-void Cli::executeScan()
+void Cli::executeScan(const QString &ifname)
 {
-    ScanFtp *s = new ScanFtp();
+    ScanAll *s = new ScanAll();
     QObject::connect (s, SIGNAL(found(const QString&)),
-                    handler, SLOT(addFtp(const QString&)));
-    s->scan();
+                      handler, SLOT(addFtp(const QString&)));
+    if (ifname.isEmpty())
+        s->scan();
+    else
+        s->scanIface(ifname);
 }
 
 void Cli::command(QString cmd)
@@ -42,8 +44,14 @@ void Cli::command(QString cmd)
         emit addFtp(cmd.split(' ').at(1));
     else if (cmd=="print")
         emit print(&out);
-    else if (cmd=="scan")
-        emit scan();
+    else if (cmd.startsWith("scan"))
+    {
+        QStringList splited = cmd.split(' ');
+        if (splited.size() >= 2)
+            emit scan(splited.at(1));
+        else
+            emit scan(QString());
+    }
     else
         out << tr("Unknown command : %1").arg(cmd) <<endl;
 }

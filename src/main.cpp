@@ -3,10 +3,16 @@
 #include <QLocale>
 #include "burgos.h"
 #include "messagehandler.h"
+#include "buffererrorhandler.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+#ifdef Q_OS_UNIX
+    if (QCoreApplication::arguments().contains("--increase-buffer"))
+        return BufferErrorHandler::increaseBuffer();
+#endif
 
     MessageHandler::pick();
     qDebug("MessageHandler started");

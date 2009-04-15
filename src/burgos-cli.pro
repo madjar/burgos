@@ -6,3 +6,5 @@ include(common.pri)
 SOURCES += main-cli.cpp \
     cli.cpp
 HEADERS += cli.h
+
+unix:SOURCES += buffererrorhandler_cli.cpp

@@ -11,14 +11,13 @@ class ProbeFtp : public QObject
 {
     Q_OBJECT
 public:
-    ProbeFtp(QString host, QObject *parent = 0);
-    ~ProbeFtp();
+    ProbeFtp(const QString &host, QObject *parent = 0);
 
 signals:
     void connected(const QString &host);
-    void done();
 
 private slots:
+    void pingFinished(bool answers);
     void ftpStateChanged(int state);
 
 private:

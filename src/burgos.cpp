@@ -8,6 +8,7 @@
 #include "ftpmodel.h"
 #include "ftpwidget.h"
 #include "logwidget.h"
+#include "scanwidget.h"
 
 Burgos::Burgos(QWidget *parent) :
         QWidget(parent)
@@ -40,6 +41,7 @@ Burgos::Burgos(QWidget *parent) :
     FtpModel *model = new FtpModel(this);
 
     tabWidget->addTab(new FtpWidget(model),tr("&Ftp servers"));
+    tabWidget->addTab(new ScanWidget(model), "&Scan");
     tabWidget->addTab(new LogWidget(), tr("&Log"));
 
     resize(sizeHint()); //Needed for the size to ba saved when the widget is hidden

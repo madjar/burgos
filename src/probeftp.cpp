@@ -1,4 +1,5 @@
 #include "probeftp.h"
+#include "ping.h"
 
 #include <QObject>
 #include <QString>
@@ -6,27 +7,25 @@
 
 #include <QtDebug>
 
-ProbeFtp::ProbeFtp(QString host, QObject *parent) : QObject(parent), host(host)
+ProbeFtp::ProbeFtp(const QString &host, QObject *parent) : QObject(parent), host(host)
 {
-    ftp = new QFtp();
-    connect (ftp, SIGNAL(stateChanged(int)),
-             this, SLOT(ftpStateChanged(int)));
-    ftp->connectToHost(host);
-    ftp->login("anonymous","burgosProbing");
-    QTimer::singleShot(timeOut , this, SLOT(deleteLater()));
-
+    Ping::ping(host, this, SLOT(pingFinished(bool)));
 }
 
-ProbeFtp::~ProbeFtp()
+void ProbeFtp::pingFinished(bool answers)
 {
-    if (ftp)
+    if (answers)
     {
-        //qWarning()<<host<< tr("Socket is still existing but should have been destroyed before");
-        ftp->close();
-        ftp->deleteLater();
-        ftp = 0;
+        qDebug() << host << "answers to ping";
+        ftp = new QFtp(this);
+        connect (ftp, SIGNAL(stateChanged(int)),
+                 this, SLOT(ftpStateChanged(int)));
+        ftp->connectToHost(host);
+        ftp->login("anonymous","burgosProbing");
+        QTimer::singleShot(timeOut , this, SLOT(deleteLater()));
     }
-    emit done();
+    else
+        deleteLater();
 }
 
 void ProbeFtp::ftpStateChanged(int state)
@@ -38,7 +37,6 @@ void ProbeFtp::ftpStateChanged(int state)
     }
     else if (state == QFtp::Unconnected)
     {
-        //qDebug()<<host<<ftp->error();
         deleteLater();
     }
 }

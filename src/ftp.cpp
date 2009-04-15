@@ -95,7 +95,7 @@ void Ftp::ftpDone(bool error)
         processNextDirectory();
 }
 
-QString Ftp::sanitize(QString string)
+QString Ftp::sanitize(const QString &string)
 {
     // Nettoie les chaînes obtenues par listInfo
     // Problème vient du fait que QFtp récupère les noms de fichier en utf8 et les interprète comme de l'utf16.
@@ -106,6 +106,13 @@ QString Ftp::sanitize(QString string)
         char *ret = out;
         while (*in)
         {
+            //if (*in == 232 || (*in >= 232 && *in <= 235))
+            if ((*in & 0xC0) == 0xC0 && (*(in+1) & 0xC0) != 0x80)
+            {
+                // This ain't not utf8, ma'am, this is fracking latin9
+                // See http://en.wikipedia.org/wiki/Utf8#Description for details
+                return string;
+            }
             if(*in>=256)
                 qWarning()<<tr("\"%1\" is not a utf8 string, behavior is not guaranteed.").arg(string);
             *out++=(char)*in++;
