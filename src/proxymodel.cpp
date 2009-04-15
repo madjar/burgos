@@ -76,12 +76,25 @@ bool ProxyModel::filterAcceptsRow (int sourceRow,const QModelIndex & sourceParen
 {
     if (filterRegExp().isEmpty())
         return true; // Inutile de faire une recherche récursive si on ne recherche pas.
+
     QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+
+    //Looking if it's cached
+    DomItem *item = static_cast<DomItem *>(index.internalPointer());
+    if (item->cachedSearchName == filterRegExp().pattern())
+    {
+        return item->cachedSearchResult;
+    }
+
     bool result = sourceModel()-> data(index).toString().contains(filterRegExp());
     for (int i=0; index.child(i, 0).isValid(); i++)
     {
         result = result || filterAcceptsRow(i, index);
     }
-    // Idée : on perd pas mal de temps à revérifier chaque noeud plusieurs fois : y'a de l'optimisation à faire.
+
+    // Saving to cache
+    item->cachedSearchName = filterRegExp().pattern();
+    item->cachedSearchResult = result;
+
     return result;
 }
