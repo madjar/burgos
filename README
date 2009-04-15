@@ -1,22 +1,9 @@
 Hello, and welcome to Burgos, the to-be cutting-edge distributed ftp indexer and search engine !
 
-First of all, you will need Qt in order to compile it. You can find Qt at this address : http://www.qtsoftware.com.
+Latest version is available at https://launchpad.net/burgos
 
-To compile Burgos, execute :
-qmake
-make
+This software is governed by the CeCILL license. You can find the full license in the file COPYING (or COPYING.fr for the french version).
 
-If you just want to build burgos-cli, replace the latter by :
-make sub-src-burgos-cli-pro
+See INSTALL for instructions on how to build Burgos from source.
 
-----------------
-Language files :
-
-In order to update the language files, we first need to make a dummy project file containing all source files. For that, type :
-qmake -project -o ts.pro
-then you can type
-lupdate ts.pro
-and
-lrelease ts.pro
-
-Don't forget to remove ts.pro in order to clean.
+Please remember that this software is curently under devellopment, and therefore it may not work perfectly. Please report any bug to our bug tracking system : https://bugs.launchpad.net/burgos
