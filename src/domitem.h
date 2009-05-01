@@ -56,6 +56,10 @@ public:
     QDomElement element() const;
     DomItem *newChild(const QString &tagName);
 
+    // These are used by ProxyModel to cache results
+    QString cachedSearchName;
+    bool cachedSearchResult;
+
 private:
     QDomNode domNode;
     QHash<int,DomItem*> childItems;
