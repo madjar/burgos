@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #ifdef Q_OS_LINUX
 const quint32 maxProbe = 128;
+#elif Q_OS_MAC
+const quint32 maxProbe = 50;
 #else
 const quint32 maxProbe = 60;
 #endif
