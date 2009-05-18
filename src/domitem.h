@@ -56,9 +56,12 @@ public:
     QDomElement element() const;
     DomItem *newChild(const QString &tagName);
 
-    // These are used by ProxyModel to cache results
+    // These are used by ProxyModel to cache results on files that must be shown
+    // and on dir exactly matching search and it sons
     QString cachedSearchName;
+    QString cachedSearchDirName;
     bool cachedSearchResult;
+    bool cachedSearchDirResult;
 
 private:
     QDomNode domNode;

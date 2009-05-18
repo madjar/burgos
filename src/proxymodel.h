@@ -53,6 +53,11 @@ protected:
     bool filterAcceptsRow(int sourceRow,
                           const QModelIndex & sourceParent
                           ) const ;
+
+private:
+    bool matches(const QModelIndex &index) const;
+    bool isSonOfExactMatchCached(const QModelIndex &index) const;
+    bool isSonOfExactMatch(const QModelIndex &index) const;
 };
 
 #endif // PROXYMODEL_H

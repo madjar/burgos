@@ -86,15 +86,54 @@ bool ProxyModel::filterAcceptsRow (int sourceRow,const QModelIndex & sourceParen
         return item->cachedSearchResult;
     }
 
-    bool result = sourceModel()-> data(index).toString().contains(filterRegExp());
-    for (int i=0; index.child(i, 0).isValid(); i++)
-    {
-        result = result || filterAcceptsRow(i, index);
-    }
+    bool result = matches(index);
 
     // Saving to cache
     item->cachedSearchName = filterRegExp().pattern();
     item->cachedSearchResult = result;
 
     return result;
+}
+
+bool ProxyModel::matches(const QModelIndex &index) const
+{
+    // true if the name matches
+    if (sourceModel()-> data(index).toString().contains(filterRegExp()))
+        return true;
+
+    // true of the name of one parent matches
+    if (index.parent().isValid() && isSonOfExactMatchCached(index.parent()))
+        return true;
+
+    // true if one son matches (needed to dispay folders)
+    for (int i=0; index.child(i, 0).isValid(); i++)
+    {
+        if (filterAcceptsRow(i, index))
+            return true;
+    }
+    return false;
+}
+
+bool ProxyModel::isSonOfExactMatchCached(const QModelIndex &index) const
+{
+    DomItem *item = static_cast<DomItem *>(index.internalPointer());
+    if (item->cachedSearchDirName == filterRegExp().pattern())
+    {
+        return item->cachedSearchDirResult;
+    }
+
+    bool result = isSonOfExactMatch(index);
+
+    item->cachedSearchDirName = filterRegExp().pattern();
+    item->cachedSearchDirResult = result;
+
+    return result;
+}
+
+bool ProxyModel::isSonOfExactMatch(const QModelIndex &index) const
+{
+    if (sourceModel()-> data(index).toString().contains(filterRegExp()))
+        return true;
+
+    return index.parent().isValid() && isSonOfExactMatchCached(index.parent());
 }
