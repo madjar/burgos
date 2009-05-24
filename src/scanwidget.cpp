@@ -88,7 +88,8 @@ ScanWidget::ScanWidget(FtpModel *ftpModel, QWidget *parent) :
         }
     }
 
-    maxItem->setSelected(true);
+    if (maxItem)
+        maxItem->setSelected(true);
 
 #if QT_VERSION >= 0x040500 // Only for Qt 4.5 and later
     QTreeWidgetItem *item = new QTreeWidgetItem(ui.treeWidget, 1000);
@@ -118,7 +119,7 @@ void ScanWidget::reactiveButton()
 {
     scanInProgress = false;
     ui.pushButton->setText(tr("Scan"));
-    //TODO ce texte apparait �  trois endroits différents. (ui et ici)
+    //TODO ce texte apparait à trois endroits différents. (ui et ici)
 }
 
 ScanAll *ScanWidget::newScanAll()
