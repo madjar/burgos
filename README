@@ -1,9 +1,0 @@
-Hello, and welcome to Burgos, the to-be cutting-edge distributed ftp indexer and search engine !
-
-Latest version is available at https://launchpad.net/burgos
-
-This software is governed by the CeCILL license. You can find the full license in the file COPYING (or COPYING.fr for the french version).
-
-See INSTALL for instructions on how to build Burgos from source.
-
-Please remember that this software is curently under development, and therefore it may not work perfectly. Please report any bug to our bug tracking system : https://bugs.launchpad.net/burgos
